@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "id": "visual.environment.fixture-cabinet",
+  "kind": "environment",
+  "renderMode": "uprightBillboard",
+  "frame": {
+    "width": 683,
+    "height": 1024
+  },
+  "files": {
+    "albedo": "albedo.webp"
+  },
+  "colorSpace": "srgb",
+  "fallback": "procedural.environment",
+  "provenance": {
+    "source": "image_gen",
+    "created": "2026-10-31"
+  },
+  "worldHeight": 2.6
+}

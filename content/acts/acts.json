@@ -1,10 +1,49 @@
 {
   "schemaVersion": 1,
   "acts": [
-    {"id":"act.illusion","name":"Шафа, що забуває людей","actorId":"npc.illusionist","prepStation":"station.cabinet","prepKey":"cabinetPrepared","cueLabels":["Підняти дзеркало","Закрити завісу"],"fact":"fact.hidden_passage"},
-    {"id":"act.aerial","name":"Танець на порожній висоті","actorId":"npc.acrobat","prepStation":"station.rig","prepKey":"rigPrepared","cueLabels":["Затягнути противагу","Дати світловий сигнал"],"fact":"fact.blackout"},
-    {"id":"act.knives","name":"Пам’ять ножів","actorId":"npc.knife_thrower","prepStation":"station.wheel","prepKey":"wheelPrepared","cueLabels":["Вирівняти колесо","Показати контрольний кидок"],"fact":"fact.knife_inspection"}
+    {
+      "id": "act.illusion",
+      "name": "Шафа, що забуває людей",
+      "actorId": "npc.illusionist",
+      "prepStation": "station.cabinet",
+      "prepKey": "cabinetPrepared",
+      "cueLabels": [
+        "Підняти дзеркало — відкрити світ,",
+        "Закрити завісу — сховати слід."
+      ],
+      "fact": "fact.hidden_passage"
+    },
+    {
+      "id": "act.aerial",
+      "name": "Танець на порожній висоті",
+      "actorId": "npc.acrobat",
+      "prepStation": "station.rig",
+      "prepKey": "rigPrepared",
+      "cueLabels": [
+        "Затягнути противагу — втримати політ,",
+        "Дати світловий сигнал — відкрити білий світ."
+      ],
+      "fact": "fact.blackout"
+    },
+    {
+      "id": "act.knives",
+      "name": "Пам’ять ножів",
+      "actorId": "npc.knife_thrower",
+      "prepStation": "station.wheel",
+      "prepKey": "wheelPrepared",
+      "cueLabels": [
+        "Вирівняти колесо — приборкати вісь,",
+        "Контрольний кидок — і на лезо дивись."
+      ],
+      "fact": "fact.knife_inspection"
+    }
   ],
-  "initialOrder": ["act.illusion","act.aerial","act.knives"],
-  "enabledScenarios": ["scenario.wheel"]
+  "initialOrder": [
+    "act.illusion",
+    "act.aerial",
+    "act.knives"
+  ],
+  "enabledScenarios": [
+    "scenario.wheel"
+  ]
 }

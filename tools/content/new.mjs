@@ -8,12 +8,17 @@ const document=JSON.parse(await readFile(join(root,path),'utf8'));const list=kin
 if(list.some(x=>x.id===id)){console.error(`${id} already exists; no file changed.`);process.exit(1);}
 let def,meta,assetPath;
 if(kind==='npc'){
-  def={id,name:'Новий артист',visualId:`visual.character.${slug}`,color:'#c9a678',accent:'#414251',start:'backstage',patrol:['backstage','arena'],roleIds:[],actIds:[]};
+  def={id,name:'Новий артист',visualId:`visual.character.${slug}`,color:'#c9a678',accent:'#414251',speechProfileId:'speech.tragic_blank_verse',start:'backstage',patrol:['backstage','arena'],roleIds:[],actIds:[]};
   assetPath=`public/assets/characters/${slug}`;meta={schemaVersion:1,id:def.visualId,kind:'character',renderMode:'uprightBillboard',worldHeight:2,frame:{width:128,height:192,anchorPx:[64,176]},directions:['south','west','east','north'],clips:{idle:{file:'idle.png',frameCount:4,fps:4,loop:true},walk:{file:'walk.png',frameCount:6,fps:8,loop:true},talk:{file:'talk.png',frameCount:4,fps:6,loop:true},interact:{file:'interact.png',frameCount:6,fps:8,loop:false},react:{file:'react.png',frameCount:4,fps:8,loop:false},perform:{file:'perform.png',frameCount:8,fps:8,loop:true}},defaultSocketsPx:{handRight:[94,112],handLeft:[34,112],head:[64,38]},fallback:'procedural.character'};
 }else if(kind==='item'){
   def={id,name:'Новий предмет',visualId:`visual.item.${slug}`,capabilities:['capability.tool'],carryClass:'small',decayPolicy:'persistent',roleId:`role.${slug.replaceAll('-','_')}`,startArea:'zone.props',x:15,z:-10};
   assetPath=`public/assets/items/${slug}`;meta={schemaVersion:1,id:def.visualId,kind:'item',renderMode:'uprightBillboard',worldSize:[.8,.8],frame:{width:128,height:128,anchorPx:[64,118]},files:{world:'world.png',icon:'icon.png'},fallback:'procedural.item'};
-}else def={id,name:'Новий номер',actorId:'npc.illusionist',prepStation:'station.workbench',prepKey:`${slug}Prepared`,cueLabels:['Перший сигнал','Другий сигнал'],fact:`fact.${slug.replaceAll('-','_')}`};
+}else def={id,name:'Новий номер',actorId:'npc.illusionist',prepStation:'station.workbench',prepKey:`${slug}Prepared`,cueLabels:['Перший сигнал — відкрийте світ,','Другий сигнал — сховайте слід.'],fact:`fact.${slug.replaceAll('-','_')}`};
 if(assetPath){try{await readFile(join(root,assetPath,'asset.meta.json'));console.error(`${assetPath} exists; no definition changed.`);process.exit(1);}catch{}}
+if(kind==='npc'){
+  const dialoguePath=join(root,'content/dialogues/dialogues.json'),dialogue=JSON.parse(await readFile(dialoguePath,'utf8'));
+  for(let stage=0;stage<4;stage++)dialogue.lines.push({id:`dialogue.${slug}.${stage}`,actorId:id,text:stage===3?'Я тут.\nІще.':'Мій вихід ще чекає за завісою.\nМоя дорога стелиться між тінями.',priority:stage*10,minDecay:stage,speechProfileId:def.speechProfileId});
+  await writeFile(dialoguePath,JSON.stringify(dialogue,null,2)+'\n');
+}
 list.push(def);await writeFile(join(root,path),JSON.stringify(document,null,2)+'\n');if(assetPath){await mkdir(join(root,assetPath),{recursive:true});await writeFile(join(root,assetPath,'asset.meta.json'),JSON.stringify(meta,null,2)+'\n');}
 console.log(`${id} created. Add dialogue/roles and enable acts explicitly as needed.`);

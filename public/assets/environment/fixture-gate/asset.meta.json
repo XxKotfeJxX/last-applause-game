@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "id": "visual.environment.fixture-gate",
+  "kind": "environment",
+  "renderMode": "uprightBillboard",
+  "worldHeight": 2.2,
+  "frame": {
+    "width": 1024,
+    "height": 853
+  },
+  "files": {
+    "albedo": "albedo.webp"
+  },
+  "colorSpace": "srgb",
+  "provenance": {
+    "source": "image_gen",
+    "created": "2026-10-31"
+  }
+}

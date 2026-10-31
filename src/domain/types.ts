@@ -19,7 +19,7 @@ export interface Agreement {
 }
 export interface ScheduledEvent { id: string; dueTimeMs: number; actorId: string; planRevision: number; kind: 'pickupKnives' }
 export interface WorldState {
-  schemaVersion: 1; contentPackId: string; contentVersion: number; seed: number; gameTimeMs: number;
+  ruleSetId?: string; schemaVersion: 1; contentPackId: string; contentVersion: number; seed: number; gameTimeMs: number;
   player: { x: number; z: number; direction: ActorState['direction']; animationState: string; animationStartedAt: number };
   actors: Record<string,ActorState>; items: Record<string,ItemState>; tokens: number;
   facts: string[]; mechanisms: Record<string,boolean>; slots: SlotState[]; agreements: Agreement[];

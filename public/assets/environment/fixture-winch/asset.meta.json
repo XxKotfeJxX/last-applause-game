@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "id": "visual.environment.fixture-winch",
+  "kind": "environment",
+  "renderMode": "uprightBillboard",
+  "frame": {
+    "width": 1024,
+    "height": 936
+  },
+  "files": {
+    "albedo": "albedo.webp"
+  },
+  "colorSpace": "srgb",
+  "fallback": "procedural.environment",
+  "provenance": {
+    "source": "image_gen",
+    "created": "2026-10-31"
+  },
+  "worldHeight": 1.5
+}

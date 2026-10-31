@@ -865,6 +865,139 @@ export const assetCatalog = {
       }
     }
   },
+  "visual.environment.fixture-cabinet": {
+    "kind": "environment",
+    "base": "assets/environment/fixture-cabinet/",
+    "files": {
+      "albedo": "assets/environment/fixture-cabinet/albedo.webp"
+    },
+    "meta": {
+      "schemaVersion": 1,
+      "id": "visual.environment.fixture-cabinet",
+      "kind": "environment",
+      "renderMode": "uprightBillboard",
+      "frame": {
+        "width": 683,
+        "height": 1024
+      },
+      "files": {
+        "albedo": "albedo.webp"
+      },
+      "colorSpace": "srgb",
+      "fallback": "procedural.environment",
+      "provenance": {
+        "source": "image_gen",
+        "created": "2026-10-31"
+      },
+      "worldHeight": 2.6
+    }
+  },
+  "visual.environment.fixture-gate": {
+    "kind": "environment",
+    "base": "assets/environment/fixture-gate/",
+    "files": {
+      "albedo": "assets/environment/fixture-gate/albedo.webp"
+    },
+    "meta": {
+      "schemaVersion": 1,
+      "id": "visual.environment.fixture-gate",
+      "kind": "environment",
+      "renderMode": "uprightBillboard",
+      "worldHeight": 2.2,
+      "frame": {
+        "width": 1024,
+        "height": 853
+      },
+      "files": {
+        "albedo": "albedo.webp"
+      },
+      "colorSpace": "srgb",
+      "provenance": {
+        "source": "image_gen",
+        "created": "2026-10-31"
+      }
+    }
+  },
+  "visual.environment.fixture-wheel": {
+    "kind": "environment",
+    "base": "assets/environment/fixture-wheel/",
+    "files": {
+      "albedo": "assets/environment/fixture-wheel/albedo.webp"
+    },
+    "meta": {
+      "schemaVersion": 1,
+      "id": "visual.environment.fixture-wheel",
+      "kind": "environment",
+      "renderMode": "uprightBillboard",
+      "worldHeight": 2.5,
+      "frame": {
+        "width": 1024,
+        "height": 1013
+      },
+      "files": {
+        "albedo": "albedo.webp"
+      },
+      "colorSpace": "srgb",
+      "provenance": {
+        "source": "image_gen",
+        "created": "2026-10-31"
+      }
+    }
+  },
+  "visual.environment.fixture-winch": {
+    "kind": "environment",
+    "base": "assets/environment/fixture-winch/",
+    "files": {
+      "albedo": "assets/environment/fixture-winch/albedo.webp"
+    },
+    "meta": {
+      "schemaVersion": 1,
+      "id": "visual.environment.fixture-winch",
+      "kind": "environment",
+      "renderMode": "uprightBillboard",
+      "frame": {
+        "width": 1024,
+        "height": 936
+      },
+      "files": {
+        "albedo": "albedo.webp"
+      },
+      "colorSpace": "srgb",
+      "fallback": "procedural.environment",
+      "provenance": {
+        "source": "image_gen",
+        "created": "2026-10-31"
+      },
+      "worldHeight": 1.5
+    }
+  },
+  "visual.environment.fixture-workbench": {
+    "kind": "environment",
+    "base": "assets/environment/fixture-workbench/",
+    "files": {
+      "albedo": "assets/environment/fixture-workbench/albedo.webp"
+    },
+    "meta": {
+      "schemaVersion": 1,
+      "id": "visual.environment.fixture-workbench",
+      "kind": "environment",
+      "renderMode": "uprightBillboard",
+      "frame": {
+        "width": 1024,
+        "height": 683
+      },
+      "files": {
+        "albedo": "albedo.webp"
+      },
+      "colorSpace": "srgb",
+      "fallback": "procedural.environment",
+      "provenance": {
+        "source": "image_gen",
+        "created": "2026-10-31"
+      },
+      "worldHeight": 1.3
+    }
+  },
   "visual.environment.foyer": {
     "kind": "environment",
     "base": "assets/environment/foyer/",
@@ -971,6 +1104,87 @@ export const assetCatalog = {
         "created": "2026-10-31",
         "purpose": "original hand-painted overhead circus floor"
       }
+    }
+  },
+  "visual.environment.wall-dressing": {
+    "kind": "environment",
+    "base": "assets/environment/wall-dressing/",
+    "files": {
+      "albedo": "assets/environment/wall-dressing/albedo.webp"
+    },
+    "meta": {
+      "schemaVersion": 1,
+      "id": "visual.environment.wall-dressing",
+      "kind": "environment",
+      "renderMode": "surface",
+      "frame": {
+        "width": 1024,
+        "height": 512
+      },
+      "files": {
+        "albedo": "albedo.webp"
+      },
+      "colorSpace": "srgb",
+      "fallback": "procedural.environment",
+      "provenance": {
+        "source": "image_gen",
+        "created": "2026-10-31"
+      },
+      "repeat": true
+    }
+  },
+  "visual.environment.wall-machinery": {
+    "kind": "environment",
+    "base": "assets/environment/wall-machinery/",
+    "files": {
+      "albedo": "assets/environment/wall-machinery/albedo.webp"
+    },
+    "meta": {
+      "schemaVersion": 1,
+      "id": "visual.environment.wall-machinery",
+      "kind": "environment",
+      "renderMode": "surface",
+      "frame": {
+        "width": 1024,
+        "height": 512
+      },
+      "files": {
+        "albedo": "albedo.webp"
+      },
+      "colorSpace": "srgb",
+      "fallback": "procedural.environment",
+      "provenance": {
+        "source": "image_gen",
+        "created": "2026-10-31"
+      },
+      "repeat": true
+    }
+  },
+  "visual.environment.wall-theatre": {
+    "kind": "environment",
+    "base": "assets/environment/wall-theatre/",
+    "files": {
+      "albedo": "assets/environment/wall-theatre/albedo.webp"
+    },
+    "meta": {
+      "schemaVersion": 1,
+      "id": "visual.environment.wall-theatre",
+      "kind": "environment",
+      "renderMode": "surface",
+      "frame": {
+        "width": 1024,
+        "height": 576
+      },
+      "files": {
+        "albedo": "albedo.webp"
+      },
+      "colorSpace": "srgb",
+      "fallback": "procedural.environment",
+      "provenance": {
+        "source": "image_gen",
+        "created": "2026-10-31"
+      },
+      "repeat": true
     }
   }
 } as Record<string,{kind:string;base:string;files:Record<string,string>;meta:Record<string,unknown>}>;

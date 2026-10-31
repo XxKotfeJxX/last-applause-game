@@ -1,0 +1,41 @@
+{
+  "schemaVersion": 1,
+  "profiles": [
+    {
+      "id": "speech.tragic_blank_verse",
+      "description": "Переважно п’ятистопний білий ямб; урочиста трагедія; жодних хибних правил.",
+      "decayPolicy": "authored_variants",
+      "runtimeGeneration": false
+    },
+    {
+      "id": "speech.baroque",
+      "description": "Барокова метафора і подвійний сенс; декоративні рими, не сувора стопа.",
+      "decayPolicy": "authored_variants",
+      "runtimeGeneration": false
+    },
+    {
+      "id": "speech.percussive_rap",
+      "description": "Уривчастий реп, внутрішні рими, чіткі дії.",
+      "decayPolicy": "authored_variants",
+      "runtimeGeneration": false
+    },
+    {
+      "id": "speech.lyric_amphibrach",
+      "description": "Плавні трискладові рухи, наближення до амфібрахія; у розпаді зупинки.",
+      "decayPolicy": "authored_variants",
+      "runtimeGeneration": false
+    },
+    {
+      "id": "speech.technical_iamb",
+      "description": "Короткий чотиристопний ямб, технічна послідовність важливіша за прикрасу.",
+      "decayPolicy": "authored_variants",
+      "runtimeGeneration": false
+    },
+    {
+      "id": "speech.folk_kolomyika",
+      "description": "Коломийковий рух 8+6 як орієнтир; практичний чорний гумор, чітка ціна.",
+      "decayPolicy": "authored_variants",
+      "runtimeGeneration": false
+    }
+  ]
+}

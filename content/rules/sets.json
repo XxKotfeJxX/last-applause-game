@@ -1,0 +1,1 @@
+{"schemaVersion":1,"defaultId":"rules.base","sets":[{"id":"rules.base","initialTokens":4,"interactionRadius":2.8,"actorSpeed":1.5,"finaleDurationMs":12000,"illusionPrice":2,"safeKitPrice":1},{"id":"rules.rehearsal","initialTokens":4,"interactionRadius":2.8,"actorSpeed":1.5,"finaleDurationMs":24000,"illusionPrice":2,"safeKitPrice":1}]}

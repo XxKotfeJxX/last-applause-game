@@ -6,9 +6,10 @@ import { floorY } from '../simulation/navigation';
 import type { AssetResolver } from './assets';
 
 export interface AreaArt {
-  visualId:string;wallColor:string;trimColor:string;accentColor:string;theme:string;
+  visualId:string;wallVisualId:string;wallColor:string;trimColor:string;accentColor:string;theme:string;
 }
 export const areaArt=artJson.areas as Record<string,AreaArt>;
+export const fixtureArt=artJson.fixtures as Record<string,string>;
 type PaintedMaterial=THREE.MeshStandardMaterial|THREE.MeshBasicMaterial;
 type Batch={area:string;color:string;emissive:boolean;matrices:THREE.Matrix4[]};
 

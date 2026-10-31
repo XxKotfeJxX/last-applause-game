@@ -1,0 +1,7 @@
+{
+  "file": "last-applause-1.1.0-windows-x64.exe",
+  "bytes": 330786971,
+  "sha256": "9c33db5a09e21642e2f1e011b25378ecaef6cb448e63d9c459adc212d4b4eafe",
+  "windowsRuntimeTested": false,
+  "packCommand": "npm run pack:win -- --config.win.signAndEditExecutable=false --config.compression=store"
+}

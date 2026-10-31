@@ -5,7 +5,7 @@ import type { CharacterDef, ItemDef } from '../content';
 export const clipFrames:Record<string,number>={idle:4,walk:6,talk:4,interact:6,react:4,perform:8,carry_walk:6};
 export const clipFps:Record<string,number>={idle:4,walk:8,talk:6,interact:8,react:8,perform:8,carry_walk:8};
 const W=128,H=192;
-type Atlas={texture:THREE.Texture;frames:number;rows:number};
+export type Atlas={texture:THREE.Texture;frames:number;rows:number;fps?:number;loop?:boolean;width?:number;height?:number;anchor?:number[];worldHeight?:number;sockets?:Record<string,number[]>};
 export class AssetResolver {
   readonly requests=new Map<string,number>();readonly fallback=new Set<string>();
   private cache=new Map<string,Atlas>();private loader=new THREE.TextureLoader();
@@ -22,7 +22,7 @@ export class AssetResolver {
     if(file)this.loader.load(new URL(file,document.baseURI).href,texture=>{
       texture.colorSpace=THREE.SRGBColorSpace;
       texture.anisotropy=4;
-      texture.wrapS=texture.wrapT=THREE.ClampToEdgeWrapping;
+      texture.wrapS=texture.wrapT=assetCatalog[visualId]?.meta?.repeat?THREE.RepeatWrapping:THREE.ClampToEdgeWrapping;
       atlas.texture=texture;this.fallback.delete(key);
     },undefined,()=>{this.fallback.add(key);console.warn(`Environment ${visualId}: using procedural fallback.`);});
     else this.fallback.add(key);
@@ -32,10 +32,11 @@ export class AssetResolver {
     const key=`${def.visualId}:${clip}`;this.requests.set(key,(this.requests.get(key)??0)+1);
     const found=this.cache.get(key);if(found)return found;
     const entry=assetCatalog[def.visualId];const file=entry?.files[clip];
-    const metaClip=(entry?.meta?.clips as Record<string,{frameCount?:number}>|undefined)?.[clip];
+    const metaClip=(entry?.meta?.clips as Record<string,{frameCount?:number;fps?:number;loop?:boolean}>|undefined)?.[clip];
     const frames=metaClip?.frameCount??clipFrames[clip]??4;
     const fallback=this.proceduralCharacter(def,clip,frames);
-    const atlas={texture:fallback,frames,rows:4};this.cache.set(key,atlas);
+    const frame=entry?.meta?.frame as {width:number;height:number;anchorPx?:number[]}|undefined;
+    const atlas:Atlas={texture:fallback,frames,rows:4,fps:metaClip?.fps??clipFps[clip]??4,loop:metaClip?.loop??true,width:frame?.width??W,height:frame?.height??H,anchor:frame?.anchorPx??[64,176],worldHeight:(entry?.meta?.worldHeight as number|undefined)??2,sockets:entry?.meta?.defaultSocketsPx as Record<string,number[]>|undefined};this.cache.set(key,atlas);
     if(file){
       this.loader.load(new URL(file,document.baseURI).href,texture=>{texture.colorSpace=THREE.SRGBColorSpace;texture.magFilter=THREE.NearestFilter;atlas.texture=texture;},undefined,()=>{this.fallback.add(key);console.warn(`Асeт ${key} не завантажився; використано заглушку.`);});
     }else this.fallback.add(key);

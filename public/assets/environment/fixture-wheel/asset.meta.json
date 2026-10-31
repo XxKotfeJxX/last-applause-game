@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "id": "visual.environment.fixture-wheel",
+  "kind": "environment",
+  "renderMode": "uprightBillboard",
+  "worldHeight": 2.5,
+  "frame": {
+    "width": 1024,
+    "height": 1013
+  },
+  "files": {
+    "albedo": "albedo.webp"
+  },
+  "colorSpace": "srgb",
+  "provenance": {
+    "source": "image_gen",
+    "created": "2026-10-31"
+  }
+}

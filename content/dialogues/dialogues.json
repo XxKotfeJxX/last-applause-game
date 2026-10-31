@@ -1,15 +1,218 @@
 {
-  "schemaVersion":1,
-  "lines":[
-    {"id":"dialogue.ringmaster.0","actorId":"npc.ringmaster","text":"«Вперше й востаннє», — каже конферансьє. «Заміни оголошую лише після згоди обох артистів».","priority":0},
-    {"id":"dialogue.ringmaster.3","actorId":"npc.ringmaster","text":"«У залі нікого не лишилося. У програмі, на жаль, іще є ви». Він чекає останньої перевірки.","minDecay":3,"priority":3},
-    {"id":"dialogue.illusionist.0","actorId":"npc.illusionist","text":"«Моє ім’я вже погано тримається на афіші. Дайте мені ранній номер — покажу, як зникають люди».","priority":0},
-    {"id":"dialogue.illusionist.1","actorId":"npc.illusionist","text":"«Бачили вихід за дзеркалом? Тепер розумієте, чому я не боюся завіси».","requiresFact":"fact.hidden_passage","priority":2},
-    {"id":"dialogue.thrower.0","actorId":"npc.knife_thrower","text":"«Ножі самі не приходять. Спершу перевірка, потім кидок».","priority":0},
-    {"id":"dialogue.acrobat.0","actorId":"npc.acrobat","text":"«Спершу перевірте лебідку. Повітря не пробачає бухгалтерських помилок».","priority":0},
-    {"id":"dialogue.acrobat.1","actorId":"npc.acrobat","text":"«Противага тримає. Якщо треба — виступлю раніше».","requiresMechanism":"rigPrepared","priority":2},
-    {"id":"dialogue.stagehand.0","actorId":"npc.stagehand","text":"«У черзі колесо й лебідка. Мене вистачить на обидва, якщо цирк не зникне швидше».","priority":0},
-    {"id":"dialogue.quartermaster.0","actorId":"npc.quartermaster","text":"«Сценічні ножі видаю під запис. Фарбу беріть, тільки не на журнал».","priority":0},
-    {"id":"dialogue.quartermaster.1","actorId":"npc.quartermaster","text":"«Сценічний комплект записаний на вас. Повернення — до кінця світу, будь ласка».","requiresFact":"fact.safe_issued","priority":2}
+  "schemaVersion": 1,
+  "lines": [
+    {
+      "id": "dialogue.ringmaster.0",
+      "actorId": "npc.ringmaster",
+      "text": "Весь світ — манеж, а ми — його примари.\nІ кожен вихід — крок за край завіси.\nЗаміни я оголошу лиш тоді,\nЯк згоду вам дадуть обидва лицедії.",
+      "priority": 0,
+      "minDecay": 0,
+      "speechProfileId": "speech.tragic_blank_verse"
+    },
+    {
+      "id": "dialogue.ringmaster.1",
+      "actorId": "npc.ringmaster",
+      "text": "Одного голосу вже менше в цій виставі.\nНе поспішайте: час між актами ще ваш.\nХай двоє згоду скріплять перед зміною.",
+      "priority": 10,
+      "minDecay": 1,
+      "speechProfileId": "speech.tragic_blank_verse"
+    },
+    {
+      "id": "dialogue.ringmaster.2",
+      "actorId": "npc.ringmaster",
+      "text": "Ще дві завіси впали. Світ прозорий.\nЯ мушу чути згоду двох. Обох.\nІ тільки потім зміниться програма.",
+      "priority": 20,
+      "minDecay": 2,
+      "speechProfileId": "speech.tragic_blank_verse"
+    },
+    {
+      "id": "dialogue.ringmaster.3",
+      "actorId": "npc.ringmaster",
+      "text": "Немає зали. Є останній вихід.\nПеревірка. Потім — ваша воля.\nДва голоси. Я ще тримаю слово.",
+      "priority": 30,
+      "minDecay": 3,
+      "speechProfileId": "speech.tragic_blank_verse"
+    },
+    {
+      "id": "dialogue.illusionist.0",
+      "actorId": "npc.illusionist",
+      "text": "Моє ім’я — позолота на воді,\nГримерка — мушля у майбутній пустці.\nДва жетони — й вийду я тоді,\nКоли мій вихід ще не зник у згустку.\nАбо покажіть, що знаєте таємний шлях:\nЗа знання про втрату я зніму ціну у прах.",
+      "priority": 0,
+      "minDecay": 0,
+      "speechProfileId": "speech.baroque"
+    },
+    {
+      "id": "dialogue.illusionist.1",
+      "actorId": "npc.illusionist",
+      "text": "У дзеркалі вже тінь без капелюха;\nГримерка тане, мов перлина в оцті.\nЗа вихід раніше — два жетони.\nТа знання таємного проходу зніме плату.",
+      "priority": 10,
+      "minDecay": 1,
+      "speechProfileId": "speech.baroque"
+    },
+    {
+      "id": "dialogue.illusionist.2",
+      "actorId": "npc.illusionist",
+      "text": "Я сховав би світ у складку рукава.\nСвіт сховав мене. Яка невдячна слава.\nДва жетони. Або знання прохідного дзеркала.",
+      "priority": 20,
+      "minDecay": 2,
+      "speechProfileId": "speech.baroque"
+    },
+    {
+      "id": "dialogue.illusionist.3",
+      "actorId": "npc.illusionist",
+      "text": "Перлина... мушля... порожньо.\nДва жетони.\nЗнаєте прихований прохід —\nНе платіть.",
+      "priority": 30,
+      "minDecay": 3,
+      "speechProfileId": "speech.baroque"
+    },
+    {
+      "id": "dialogue.knife_thrower.0",
+      "actorId": "npc.knife_thrower",
+      "text": "Клац — метал. Такт — приціл.\nКриве колесо? Я б не хотів.\nВирівняй вісь — я вийду раніш.\nФінальна перевірка — тоді міняй ніж.",
+      "priority": 0,
+      "minDecay": 0,
+      "speechProfileId": "speech.percussive_rap"
+    },
+    {
+      "id": "dialogue.knife_thrower.1",
+      "actorId": "npc.knife_thrower",
+      "text": "Стіл пустіє, сцена мліє,\nРука ще пам’ятає, лезо ще не гріє.\nКолесо рівне — я йду.\nПісля перевірки підміну не знайду.",
+      "priority": 10,
+      "minDecay": 1,
+      "speechProfileId": "speech.percussive_rap"
+    },
+    {
+      "id": "dialogue.knife_thrower.2",
+      "actorId": "npc.knife_thrower",
+      "text": "Такт. Ніж. Вісь рівніше.\nПеревірка. Міняй пізніше.\nРаніше не хитри:\nКомплект я звірю знов, дивись.",
+      "priority": 20,
+      "minDecay": 2,
+      "speechProfileId": "speech.percussive_rap"
+    },
+    {
+      "id": "dialogue.knife_thrower.3",
+      "actorId": "npc.knife_thrower",
+      "text": "Клац.\nВісь.\nПеревірка — потім підміна.\nНе переплутай. Ніж.",
+      "priority": 30,
+      "minDecay": 3,
+      "speechProfileId": "speech.percussive_rap"
+    },
+    {
+      "id": "dialogue.acrobat.0",
+      "actorId": "npc.acrobat",
+      "text": "Над прірвою тягнеться срібная нитка,\nНа ній колихається тінь золота.\nТа перш ніж покличе мене та блакить,\nЛебідку перевірте — вона ще тремтить.",
+      "priority": 0,
+      "minDecay": 0,
+      "speechProfileId": "speech.lyric_amphibrach"
+    },
+    {
+      "id": "dialogue.acrobat.1",
+      "actorId": "npc.acrobat",
+      "text": "Під небом порожнім холоне долоня,\nІ голос торкається краю сукні.\nЛебідку перевірте — і вийду раніше,\nДопоки ще світло тримає вогні.",
+      "priority": 10,
+      "minDecay": 1,
+      "speechProfileId": "speech.lyric_amphibrach"
+    },
+    {
+      "id": "dialogue.acrobat.2",
+      "actorId": "npc.acrobat",
+      "text": "І нитка тримає... і нитка тримає...\nЛебідку спочатку. Тоді висота.\nЯ можу раніше. Я ще пам’ятаю.",
+      "priority": 20,
+      "minDecay": 2,
+      "speechProfileId": "speech.lyric_amphibrach"
+    },
+    {
+      "id": "dialogue.acrobat.3",
+      "actorId": "npc.acrobat",
+      "text": "Над прірвою...\nЛебідку перевірте.\nЯ вийду.\nЩе.",
+      "priority": 30,
+      "minDecay": 3,
+      "speechProfileId": "speech.lyric_amphibrach"
+    },
+    {
+      "id": "dialogue.stagehand.0",
+      "actorId": "npc.stagehand",
+      "text": "Спочатку вал, а потім трос.\nТримай, допоки я кручу.\nНа галерею ключ несу;\nТам світло в темінь поверну.",
+      "priority": 0,
+      "minDecay": 0,
+      "speechProfileId": "speech.technical_iamb"
+    },
+    {
+      "id": "dialogue.stagehand.1",
+      "actorId": "npc.stagehand",
+      "text": "Спочатку вал, а потім трос.\nНе смикай трос, допоки йду.\nЯк треба темряву — знайди\nНа галереї пульт лебідки.",
+      "priority": 10,
+      "minDecay": 1,
+      "speechProfileId": "speech.technical_iamb"
+    },
+    {
+      "id": "dialogue.stagehand.2",
+      "actorId": "npc.stagehand",
+      "text": "Спочатку вал. А потім — трос.\nПульт на галереї. Ключ.\nЗатемнення готуй до сцени.",
+      "priority": 20,
+      "minDecay": 2,
+      "speechProfileId": "speech.technical_iamb"
+    },
+    {
+      "id": "dialogue.stagehand.3",
+      "actorId": "npc.stagehand",
+      "text": "Вал. Трос.\nКлюч.\nЗатемнення готуй.\nДо сцени.",
+      "priority": 30,
+      "minDecay": 3,
+      "speechProfileId": "speech.technical_iamb"
+    },
+    {
+      "id": "dialogue.quartermaster.0",
+      "actorId": "npc.quartermaster",
+      "text": "Ой неси мені жетони, не ховай в кишені,\nБо без грошей в цьому цирку не стоять на сцені.\nЗа сценічні гострі леза — лиш один жетончик,\nПід записку з полиці візьмеш свій пакуночок.",
+      "priority": 0,
+      "minDecay": 0,
+      "speechProfileId": "speech.folk_kolomyika"
+    },
+    {
+      "id": "dialogue.quartermaster.1",
+      "actorId": "npc.quartermaster",
+      "text": "Ой полиці порожніють, сходяться рахунки,\nЗа сценічні леза — один, решта не дарунки.\nПід записку видаю я, потім забирайте,\nДо кінця цього світанку крам повертайте.",
+      "priority": 10,
+      "minDecay": 1,
+      "speechProfileId": "speech.folk_kolomyika"
+    },
+    {
+      "id": "dialogue.quartermaster.2",
+      "actorId": "npc.quartermaster",
+      "text": "Ой нема вже кому борги в зошиті вертати.\nЗа комплект — один жетон. Мушу записати.\nПісля запису з полиці можете забрати.",
+      "priority": 20,
+      "minDecay": 2,
+      "speechProfileId": "speech.folk_kolomyika"
+    },
+    {
+      "id": "dialogue.quartermaster.3",
+      "actorId": "npc.quartermaster",
+      "text": "Ой... один жетон.\nЗапис.\nІз полиці забирайте.\nХоч колись вертайте.",
+      "priority": 30,
+      "minDecay": 3,
+      "speechProfileId": "speech.folk_kolomyika"
+    },
+    {
+      "id": "dialogue.illusionist.passage",
+      "actorId": "npc.illusionist",
+      "text": "Ви бачили за дзеркалом таємний берег —\nТепер ніщо не втримає мене в гримерці.\nЗнання проходу зніме плату: вийду раніше,\nЯк згоду мій колега вам напише.",
+      "priority": 5,
+      "requiresFact": "fact.hidden_passage"
+    },
+    {
+      "id": "dialogue.acrobat.ready",
+      "actorId": "npc.acrobat",
+      "text": "Тепер моя нитка тримає надійно,\nЛебідка готова, і я не тремчу.\nПокличте раніше — ступатиму вільно,\nЯк згоду колеги почую внизу.",
+      "priority": 5,
+      "requiresMechanism": "rigPrepared"
+    },
+    {
+      "id": "dialogue.quartermaster.issued",
+      "actorId": "npc.quartermaster",
+      "text": "Ой комплект уже вписала, ви тепер при ділі,\nІз полиці забирайте, поки всі ще цілі.",
+      "priority": 5,
+      "requiresFact": "fact.safe_issued"
+    }
   ]
 }

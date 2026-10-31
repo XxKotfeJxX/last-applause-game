@@ -2,8 +2,9 @@ import * as THREE from 'three';
 import { characterById, characters, itemById, items, stationById, worldData } from '../content';
 import { floorY } from '../simulation/navigation';
 import type { WorldState } from '../domain/types';
-import { AssetResolver, clipFps } from './assets';
-import { Scenography, areaArt } from './scenography';
+import { AssetResolver } from './assets';
+import { assetCatalog } from '../generated/catalog';
+import { Scenography, areaArt, fixtureArt } from './scenography';
 
 type Avatar={mesh:THREE.Mesh<THREE.PlaneGeometry,THREE.MeshBasicMaterial>;shadow:THREE.Mesh;clip:string;atlasKey:string};
 const heroDef={visualId:'visual.character.hero',color:'#e6dac0',accent:'#802c3d',name:'Герой'};
@@ -18,6 +19,24 @@ export class GameScene {
   private gate!:THREE.Mesh;
   private bloodMark!:THREE.Mesh;
   private scenery:Scenography;
+  private painted:{mesh:THREE.Mesh<THREE.BufferGeometry,THREE.MeshStandardMaterial|THREE.MeshBasicMaterial>;id:string}[]=[];
+  private frustum=new THREE.Frustum();
+  private viewProjection=new THREE.Matrix4();
+  private bounds=new THREE.Sphere(new THREE.Vector3(),2);
+  private wall(x:number,y:number,z:number,w:number,h:number,d:number,color:string,area:string){
+    const mesh=this.box(x,y,z,w,h,d,color,area),id=areaArt[area].wallVisualId;
+    mesh.material.color.set('#ffffff');mesh.material.map=this.assets.environment(id);
+    const uv=mesh.geometry.attributes.uv;
+    for(let i=0;i<uv.count;i++)uv.setX(i,uv.getX(i)*Math.max(w,d)/4);
+    this.painted.push({mesh,id});return mesh;
+  }
+  private fixture(t:typeof worldData.interactables[number],id:string){
+    const meta=assetCatalog[id]?.meta,frame=meta?.frame as {width:number;height:number}|undefined;
+    const height=(meta?.worldHeight as number|undefined)??2,width=height*(frame?frame.width/frame.height:1);
+    const mesh=new THREE.Mesh(new THREE.PlaneGeometry(width,height),new THREE.MeshBasicMaterial({map:this.assets.environment(id),transparent:true,alphaTest:.08,side:THREE.DoubleSide,depthWrite:true}));
+    mesh.position.set(t.x,floorY(t.x,t.z)+height/2,t.z);mesh.rotation.y=Math.atan2(16,24);
+    mesh.userData.stationId=t.id;this.addZoneObject(t.area,mesh);this.painted.push({mesh,id});if(t.kind==='gate')this.gate=mesh;
+  }
   constructor(container:HTMLElement){
     this.renderer=new THREE.WebGLRenderer({antialias:true,powerPreference:'high-performance'});
     this.renderer.setPixelRatio(Math.min(devicePixelRatio,2));this.renderer.outputColorSpace=THREE.SRGBColorSpace;
@@ -64,13 +83,13 @@ export class GameScene {
         let segments:[number,number][]=[[a.x-a.w/2,a.x+a.w/2]];
         for(const [left,right] of corridorCuts('x',zSide))segments=segments.flatMap(([l,r])=>right<=l||left>=r?[[l,r] as [number,number]]:([[l,Math.max(l,left)],[Math.min(r,right),r]] as [number,number][]).filter(([p,q])=>q-p>.2));
         const height=zSide>a.z?.52:h;
-        for(const [l,r] of segments)this.box((l+r)/2,a.floorY+height/2,zSide,r-l,height,.26,wallColor,a.id);
+        for(const [l,r] of segments)this.wall((l+r)/2,a.floorY+height/2,zSide,r-l,height,.26,wallColor,a.id);
       }
       for(const xSide of [a.x-a.w/2,a.x+a.w/2]){
         let segments:[number,number][]=[[a.z-a.d/2,a.z+a.d/2]];
         for(const [left,right] of corridorCuts('z',xSide))segments=segments.flatMap(([l,r])=>right<=l||left>=r?[[l,r] as [number,number]]:([[l,Math.max(l,left)],[Math.min(r,right),r]] as [number,number][]).filter(([p,q])=>q-p>.2));
         const height=xSide>a.x?.52:h;
-        for(const [l,r] of segments)this.box(xSide,a.floorY+height/2,(l+r)/2,.26,height,r-l,wallColor,a.id);
+        for(const [l,r] of segments)this.wall(xSide,a.floorY+height/2,(l+r)/2,.26,height,r-l,wallColor,a.id);
       }
       const label=this.makeLabel(a.name,4.8);label.position.set(a.x,a.floorY+3,a.z);this.scene.add(label);this.labels.set(a.id,label);
     }
@@ -84,10 +103,9 @@ export class GameScene {
     const ring=new THREE.Mesh(new THREE.TorusGeometry(5.5,.1,8,80),new THREE.MeshStandardMaterial({color:'#deb77f',metalness:.3}));ring.rotation.x=Math.PI/2;ring.position.y=.17;this.addZoneObject('zone.arena',ring);
     // Stage wheel and simple machinery are true 3D objects, while people and portable props are upright quads.
     this.wheel=new THREE.Group();this.wheel.position.set(2,0,-1);
-    const wheel=new THREE.Mesh(new THREE.TorusGeometry(1.22,.14,12,32),new THREE.MeshStandardMaterial({color:'#c39a6b',roughness:.45}));wheel.position.y=1.45;this.wheel.add(wheel);
-    for(let i=0;i<8;i++){const spoke=this.box(0,0,0,.055,2.25,.055,'#ac8355');spoke.rotation.z=i*Math.PI/8;spoke.position.set(0,1.45,0);this.wheel.add(spoke);}
+    const targetId=fixtureArt['station.wheel'],target=new THREE.Mesh(new THREE.PlaneGeometry(2.5,2.5),new THREE.MeshBasicMaterial({map:this.assets.environment(targetId),transparent:true,alphaTest:.08,side:THREE.DoubleSide}));
+    target.position.y=1.45;this.wheel.add(target);this.painted.push({mesh:target,id:targetId});
     this.scene.add(this.wheel);this.box(2,.6,-1,.45,1.2,.45,'#42313a');
-    for(let j=0;j<2;j++)this.box(-16+j*2,.45,-11,1.2,.9,.8,'#624657','zone.dressing');
     this.portrait=this.makeLabel('Портрет Северина',2.1);this.portrait.position.set(-17,2.05,-14);this.scene.add(this.portrait);
     for(let j=0;j<3;j++)this.box(13+j*1.7,.7,-14,.8,1.4,1.1,'#6b5d49','zone.props');
     for(let j=0;j<5;j++)for(let k=0;k<2;k++)this.seats.push(this.box(-4+j*2,.3,12+k*2,1.1,.6,.55,'#493b3c','zone.foyer'));
@@ -95,22 +113,10 @@ export class GameScene {
     for(const t of worldData.interactables){
       if(t.kind==='wheel')continue;
       if(t.kind==='program'||t.kind==='poster')this.box(t.x,.85,t.z,1.2,1.55,.2,t.kind==='program'?'#b48a64':'#8b555f',t.area);
-      else if(t.kind==='cabinet'){
-        this.box(t.x,1,t.z,1.35,2,.8,'#51394d',t.area);
-        for(const side of [-1,1]){
-          this.box(t.x+side*.31,1.03,t.z+.42,.58,1.8,.035,'#76506b',t.area);
-          this.box(t.x+side*.11,1.03,t.z+.46,.055,.16,.055,'#d3ac6d',t.area);
-        }
-        this.box(t.x,2.04,t.z,1.55,.14,.95,'#b49361',t.area);
-      }
-      else if(t.kind==='rig')this.box(t.x,4.2,t.z,1.3,1.4,1,'#716448',t.area);
-      else if(t.kind==='workbench'){
-        this.box(t.x,1.1,t.z,1.6,.14,.9,'#a4855a',t.area);
-        for(const x of [-.62,.62])for(const z of [-.3,.3])this.box(t.x+x,.52,t.z+z,.12,1.04,.12,'#453934',t.area);
-      }
+      else if(fixtureArt[t.id])this.fixture(t,fixtureArt[t.id]);
       else if(t.kind==='passage')this.box(t.x,.05,t.z,1.4,.1,1.4,'#756055',t.area);
       else if(t.kind==='gate')this.gate=this.box(t.x,1,t.z,.2,2,2.8,'#9b7256');
-      const label=this.makeLabel(t.name,2.5);label.position.set(t.x,floorY(t.x,t.z)+2.1,t.z);this.scene.add(label);this.labels.set(t.id,label);
+      const label=this.makeLabel(t.name,2.5);label.position.set(t.x,floorY(t.x,t.z)+Math.max(2.1,((assetCatalog[fixtureArt[t.id]]?.meta?.worldHeight as number|undefined)??0)+.35),t.z);this.scene.add(label);this.labels.set(t.id,label);
     }
   }
   private createAvatar(def:typeof heroDef){
@@ -120,14 +126,17 @@ export class GameScene {
     return{mesh,shadow,clip:'',atlasKey:''};
   }
   private setAvatar(id:string,def:typeof heroDef,x:number,z:number,clip:string,direction:string,started:number,time:number,hidden=false){
-    const view=this.avatars.get(id)!;view.mesh.visible=!hidden;view.shadow.visible=!hidden;if(hidden)return;
+    const view=this.avatars.get(id)!;this.bounds.center.set(x,floorY(x,z)+1,z);const visible=!hidden&&this.frustum.intersectsSphere(this.bounds);view.mesh.visible=visible;view.shadow.visible=visible;if(!visible)return;
     const atlas=this.assets.character(def,clip);
     if(view.mesh.material.map!==atlas.texture){view.mesh.material.map=atlas.texture;view.mesh.material.needsUpdate=true;}
-    const elapsed=Math.max(0,time-started),frame=Math.floor(elapsed/1000*(clipFps[clip]??4))%atlas.frames,row=Math.max(0,['south','west','east','north'].indexOf(direction));
+    const elapsed=Math.max(0,time-started),rawFrame=Math.floor(elapsed/1000*(atlas.fps??4)),frame=atlas.loop?rawFrame%atlas.frames:Math.min(rawFrame,atlas.frames-1),row=Math.max(0,['south','west','east','north'].indexOf(direction));
     const uv=view.mesh.geometry.attributes.uv as THREE.BufferAttribute;
     const l=frame/atlas.frames,r=(frame+1)/atlas.frames,top=1-row/4,bottom=1-(row+1)/4;
     uv.setXY(0,l,top);uv.setXY(1,r,top);uv.setXY(2,l,bottom);uv.setXY(3,r,bottom);uv.needsUpdate=true;
-    const y=floorY(x,z);view.mesh.position.set(x,y+1,z);view.shadow.position.set(x,y+.025,z);
+    const y=floorY(x,z),h=atlas.worldHeight??2,w=h*(atlas.width??128)/(atlas.height??192),anchor=atlas.anchor??[64,176];
+    view.mesh.scale.set(w/1.35,h/2,1);
+    const yaw=Math.atan2(this.camera.position.x-x,this.camera.position.z-z),offset=w*(.5-anchor[0]/(atlas.width??128));
+    view.mesh.position.set(x+Math.cos(yaw)*offset,y+h*(anchor[1]/(atlas.height??192)-.5),z-Math.sin(yaw)*offset);view.shadow.position.set(x,y+.025,z);
     view.mesh.rotation.y=Math.atan2(this.camera.position.x-x,this.camera.position.z-z);
   }
   update(s:WorldState,dt:number){
@@ -135,19 +144,30 @@ export class GameScene {
     const aspect=width/Math.max(1,height),halfH=10.5;this.camera.left=-halfH*aspect;this.camera.right=halfH*aspect;this.camera.top=halfH;this.camera.bottom=-halfH;this.camera.updateProjectionMatrix();
     const target=new THREE.Vector3(s.player.x,floorY(s.player.x,s.player.z)+.7,s.player.z);
     const desired=target.clone().add(new THREE.Vector3(16,21,24));this.camera.position.lerp(desired,Math.min(1,dt/250));this.camera.lookAt(target);this.camera.updateMatrixWorld();
+    this.frustum.setFromProjectionMatrix(this.viewProjection.multiplyMatrices(this.camera.projectionMatrix,this.camera.matrixWorldInverse));
+    for(const {mesh,id} of this.painted){const texture=this.assets.environment(id);if(mesh.material.map!==texture){mesh.material.map=texture;mesh.material.needsUpdate=true;}}
     this.setAvatar('player',heroDef,s.player.x,s.player.z,s.player.animationState,s.player.direction,s.player.animationStartedAt,s.gameTimeMs);
     for(const a of Object.values(s.actors))this.setAvatar(a.id,characterById[a.id],a.x,a.z,a.animationState,a.direction,a.animationStartedAt,s.gameTimeMs);
     for(const i of Object.values(s.items)){
       const mesh=this.itemMeshes.get(i.instanceId)!;const def=itemById[i.defId];const nextTexture=this.assets.item(def);const material=mesh.material as THREE.MeshBasicMaterial;if(material.map!==nextTexture){material.map=nextTexture;material.needsUpdate=true;}
-      mesh.scale.set(1,1,1);
+      const meta=assetCatalog[def.visualId]?.meta,worldSize=meta?.worldSize as number[]|undefined;
+      mesh.scale.set(worldSize?worldSize[0]/(def.carryClass==='large'?1.4:.8):1,worldSize?worldSize[1]/(def.carryClass==='large'?2.1:.8):1,1);
       let x=0,z=0,y=0,show=true;
       if(i.location.kind==='world'){x=i.location.x;z=i.location.z;y=floorY(x,z)+(def.carryClass==='large'?1:.48);}
       else if(i.location.kind==='actor'){const actor=i.location.actorId==='player'?s.player:s.actors[i.location.actorId];if(!actor){show=false;}else if(i.location.actorId==='player'&&i.defId==='item.hero_mask'&&s.mechanisms.heroMaskEquipped){x=actor.x+.07;z=actor.z+.09;y=floorY(x,z)+1.48;mesh.scale.set(.65,.65,1);}else if(i.location.slot==='carry'||i.location.actorId!=='player'){x=actor.x+.65;z=actor.z;y=floorY(x,z)+(def.carryClass==='large'?1:.85);}else show=false;}
-      else if(i.location.kind==='installed'){x=2+((i.location.slot==='double'||i.location.slot==='costume'||i.location.slot==='mask')?0:1.25);z=-1.1;y=i.location.slot==='double'?1.45:.9;
+      else if(i.location.kind==='installed'){x=2+((i.location.slot==='double'||i.location.slot==='costume'||i.location.slot==='mask')?0:1.25);z=['double','costume','mask'].includes(i.location.slot)?-.6:-1.1;y=i.location.slot==='double'?1.45:.9;
         if(i.location.slot==='costume'){x+=.08;z+=.08;y=1.38;mesh.scale.set(1.45,1.8,1);}
         if(i.location.slot==='mask'){x+=.1;z+=.1;y=2.25;mesh.scale.set(.8,.8,1);}
       }else show=false;
-      mesh.visible=show;if(show){mesh.position.set(x,y,z);mesh.rotation.y=Math.atan2(this.camera.position.x-x,this.camera.position.z-z);}
+      if(show&&i.location.kind==='actor'){
+        const actor=i.location.actorId==='player'?s.player:s.actors[i.location.actorId];
+        if(actor){const avatar=this.assets.character(i.location.actorId==='player'?heroDef:characterById[i.location.actorId],actor.animationState);
+          const isMask=i.defId==='item.hero_mask'&&s.mechanisms.heroMaskEquipped,anchor=avatar.anchor??[64,176],socket=avatar.sockets?.[isMask?'head':'handRight']??(isMask?[64,38]:[94,112]);
+          const unit=(avatar.worldHeight??2)/(avatar.height??192),yaw=Math.atan2(this.camera.position.x-actor.x,this.camera.position.z-actor.z),dx=(socket[0]-anchor[0])*unit;
+          x=actor.x+Math.cos(yaw)*dx;z=actor.z-Math.sin(yaw)*dx+.04;y=floorY(actor.x,actor.z)+(anchor[1]-socket[1])*unit;
+        }
+      }
+      this.bounds.center.set(x,y,z);mesh.visible=show&&this.frustum.intersectsSphere(this.bounds);if(show){mesh.position.set(x,y,z);mesh.rotation.y=Math.atan2(this.camera.position.x-x,this.camera.position.z-z);}
     }
     for(const [id,objects] of this.zoneMeshes){const faded=s.areaStates[id]==='fading';for(const o of objects){const mat=(o as THREE.Mesh).material as THREE.Material|undefined;if(mat&&'opacity' in mat){(mat as THREE.MeshStandardMaterial).opacity=faded?.52:1;(mat as THREE.MeshStandardMaterial).transparent=true;}}}
     this.portrait.visible=s.areaStates['area.dressing.illusionist']!=='erased';
@@ -162,7 +182,7 @@ export class GameScene {
         label.visible=distance>5&&distance<22;
       }else label.visible=Math.hypot((stationById[id]?.x??0)-s.player.x,(stationById[id]?.z??0)-s.player.z)<4.5;
     }
-    this.wheel.rotation.z=s.mode==='finale'?Math.sin(s.gameTimeMs/220)*.15:0;
+    const targetBoard=this.wheel.children[0];targetBoard.rotation.z=s.mode==='finale'?Math.sin(s.gameTimeMs/220)*.15:0;
     this.scenery.update(s);
     this.renderer.render(this.scene,this.camera);
   }

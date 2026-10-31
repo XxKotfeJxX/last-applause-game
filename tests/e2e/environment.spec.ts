@@ -5,7 +5,7 @@ test('seven local painted environments decode and the live world survives room c
   const errors:string[]=[];const failed:string[]=[];
   page.on('pageerror',e=>errors.push(e.message));
   page.on('requestfailed',r=>failed.push(r.url()));
-  await page.goto('/');await page.getByRole('button',{name:'Почати виставу'}).click();
+  await page.goto('/');await page.locator('#overlay [data-ui="new"]').click();
   const maps=await page.evaluate(async()=>{
     const names=['arena','foyer','backstage','dressing','props','understage','gallery'];
     return Promise.all(names.map(async name=>{
@@ -23,13 +23,13 @@ test('seven local painted environments decode and the live world survives room c
       const state=createWorld();state.player.x=position.x;state.player.z=position.z;
       localStorage.setItem('last-applause:v1:manual',JSON.stringify(state));
     },p);
-    await page.reload();await page.getByRole('button',{name:'Завантажити гру'}).click();
+    await page.reload();await page.locator('#overlay [data-ui="load"]').click();
     await expect(page.locator('#viewport canvas')).toBeVisible();
     await page.waitForTimeout(650);
     await page.screenshot({path:`test-results/environment-${p.id}.png`});
     await page.keyboard.press('KeyJ');await expect(page.getByRole('heading',{name:'Журнал вистави'})).toBeVisible();
-    await page.getByRole('button',{name:'Закрити'}).click();
-    await page.keyboard.press('Escape');await page.getByRole('button',{name:'Зберегти гру'}).click();
+    await page.locator('#overlay [data-ui="close"]').click();
+    await page.keyboard.press('Escape');await page.locator('#overlay [data-ui="save"]').click();
     const saved=await page.evaluate(()=>JSON.parse(localStorage.getItem('last-applause:v1:manual')!));
     expect(saved.player.x).toBeCloseTo(p.x,4);expect(saved.player.z).toBeCloseTo(p.z,4);
     expect(saved.gameTimeMs).toBeGreaterThan(0);expect(Object.keys(saved.items)).toHaveLength(7);
