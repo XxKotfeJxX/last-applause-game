@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "areas": {
+    "zone.arena": {"visualId":"visual.environment.arena","wallColor":"#4b2631","trimColor":"#bd965b","accentColor":"#963342","theme":"arena"},
+    "zone.foyer": {"visualId":"visual.environment.foyer","wallColor":"#49362f","trimColor":"#c5a16a","accentColor":"#883646","theme":"foyer"},
+    "zone.backstage": {"visualId":"visual.environment.backstage","wallColor":"#302a3e","trimColor":"#a68a62","accentColor":"#683d57","theme":"backstage"},
+    "zone.dressing": {"visualId":"visual.environment.dressing","wallColor":"#493347","trimColor":"#bd996b","accentColor":"#75506d","theme":"dressing"},
+    "zone.props": {"visualId":"visual.environment.props","wallColor":"#38413b","trimColor":"#b39459","accentColor":"#6e5942","theme":"props"},
+    "zone.understage": {"visualId":"visual.environment.understage","wallColor":"#28383e","trimColor":"#9f885c","accentColor":"#48666b","theme":"understage"},
+    "zone.gallery": {"visualId":"visual.environment.gallery","wallColor":"#363438","trimColor":"#b79558","accentColor":"#6f6048","theme":"gallery"}
+  }
+}

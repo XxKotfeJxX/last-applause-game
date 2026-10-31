@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "id": "visual.environment.backstage",
+  "kind": "environment",
+  "renderMode": "surface",
+  "frame": {
+    "width": 1024,
+    "height": 512
+  },
+  "files": {
+    "albedo": "floor.webp"
+  },
+  "colorSpace": "srgb",
+  "fallback": "procedural.environment",
+  "provenance": {
+    "source": "image_gen",
+    "created": "2026-10-31",
+    "purpose": "original hand-painted overhead circus floor"
+  }
+}

@@ -28,7 +28,18 @@ for(const [role,required] of Object.entries({'role.stage_double':['capability.hu
 const knownFacts=new Set(['fact.vision','fact.cabinet_seen','fact.hidden_passage','fact.blackout','fact.knife_inspection','fact.safe_issued']);
 for(const d of lines){if(!actorIds.has(d.actorId))errors.push(`content/dialogues/dialogues.json ${d.id}.actorId: unknown ${d.actorId}`);if(d.requiresFact&&!knownFacts.has(d.requiresFact))errors.push(`content/dialogues/dialogues.json ${d.id}.requiresFact: unknown ${d.requiresFact}`);if(!d.text?.trim())errors.push(`content/dialogues/dialogues.json ${d.id}.text: empty`);}
 const graph=new Map(areas.nodes.map(n=>[n.id,new Set()]));for(const [a,b] of areas.edges){graph.get(a)?.add(b);graph.get(b)?.add(a);}const seen=new Set(['arena']),q=['arena'];while(q.length)for(const n of graph.get(q.shift())??[])if(!seen.has(n)){seen.add(n);q.push(n);}if(seen.size!==areas.nodes.length)errors.push('content/areas/world.json: navigation graph is disconnected');
-const visualIds=new Set();for(const kind of ['characters','items'])for(const dir of await readdir(join(root,'public','assets',kind),{withFileTypes:true})){if(!dir.isDirectory())continue;const meta=await read(`public/assets/${kind}/${dir.name}/asset.meta.json`);visualIds.add(meta.id);}
+const visualIds=new Set(),environmentIds=new Set();for(const kind of ['characters','items','environment']){
+  let folders=[];try{folders=await readdir(join(root,'public','assets',kind),{withFileTypes:true});}catch{continue;}
+  for(const dir of folders){if(!dir.isDirectory())continue;const meta=await read(`public/assets/${kind}/${dir.name}/asset.meta.json`);visualIds.add(meta.id);if(kind==='environment')environmentIds.add(meta.id);}
+}
 for(const def of [...chars,...items])if(!visualIds.has(def.visualId))errors.push(`${def.id}.visualId: missing package ${def.visualId}`);
 if(!visualIds.has('visual.character.hero'))errors.push('visual.character.hero: missing package for player');
+const scenery=await read('content/areas/scenography.json');
+if(scenery.schemaVersion!==1)errors.push('content/areas/scenography.json: invalid schemaVersion');
+for(const area of areas.areas)if(!scenery.areas?.[area.id])errors.push(`content/areas/scenography.json: missing style for ${area.id}`);
+for(const [id,style] of Object.entries(scenery.areas??{})){
+  if(!areaIds.has(id))errors.push(`content/areas/scenography.json: unknown area ${id}`);
+  if(!environmentIds.has(style.visualId))errors.push(`content/areas/scenography.json ${id}: missing environment ${style.visualId}`);
+  for(const color of ['wallColor','trimColor','accentColor'])if(!/^#[0-9a-f]{6}$/i.test(style[color]??''))errors.push(`content/areas/scenography.json ${id}.${color}: invalid color`);
+}
 if(errors.length){for(const e of errors)console.error(e);process.exitCode=1;}else console.log(`Content valid: ${chars.length} NPC, ${items.length} items, ${acts.length} acts, ${areas.areas.length} areas, ${lines.length} dialogue lines.`);

@@ -29,6 +29,8 @@ test('new show, visible 3D scene, movement, inspection, journal, save and restor
 });
 
 test('dialogue confirms a swap and the performed act returns to exploration',async({page})=>{
+  // This includes real NPC travel; software WebGL on CI needs more than the default 30s budget.
+  test.setTimeout(90000);
   const errors:string[]=[];page.on('pageerror',e=>errors.push(e.message));
   await page.goto('/');
   await page.evaluate(async()=>{

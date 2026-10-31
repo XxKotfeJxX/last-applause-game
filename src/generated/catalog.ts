@@ -783,5 +783,194 @@ export const assetCatalog = {
       },
       "fallback": "procedural.item"
     }
+  },
+  "visual.environment.arena": {
+    "kind": "environment",
+    "base": "assets/environment/arena/",
+    "files": {
+      "albedo": "assets/environment/arena/floor.webp"
+    },
+    "meta": {
+      "schemaVersion": 1,
+      "id": "visual.environment.arena",
+      "kind": "environment",
+      "renderMode": "surface",
+      "frame": {
+        "width": 1024,
+        "height": 1024
+      },
+      "files": {
+        "albedo": "floor.webp"
+      },
+      "colorSpace": "srgb",
+      "fallback": "procedural.environment",
+      "provenance": {
+        "source": "image_gen",
+        "created": "2026-10-31",
+        "purpose": "original hand-painted overhead circus floor"
+      }
+    }
+  },
+  "visual.environment.backstage": {
+    "kind": "environment",
+    "base": "assets/environment/backstage/",
+    "files": {
+      "albedo": "assets/environment/backstage/floor.webp"
+    },
+    "meta": {
+      "schemaVersion": 1,
+      "id": "visual.environment.backstage",
+      "kind": "environment",
+      "renderMode": "surface",
+      "frame": {
+        "width": 1024,
+        "height": 512
+      },
+      "files": {
+        "albedo": "floor.webp"
+      },
+      "colorSpace": "srgb",
+      "fallback": "procedural.environment",
+      "provenance": {
+        "source": "image_gen",
+        "created": "2026-10-31",
+        "purpose": "original hand-painted overhead circus floor"
+      }
+    }
+  },
+  "visual.environment.dressing": {
+    "kind": "environment",
+    "base": "assets/environment/dressing/",
+    "files": {
+      "albedo": "assets/environment/dressing/floor.webp"
+    },
+    "meta": {
+      "schemaVersion": 1,
+      "id": "visual.environment.dressing",
+      "kind": "environment",
+      "renderMode": "surface",
+      "frame": {
+        "width": 1024,
+        "height": 1024
+      },
+      "files": {
+        "albedo": "floor.webp"
+      },
+      "colorSpace": "srgb",
+      "fallback": "procedural.environment",
+      "provenance": {
+        "source": "image_gen",
+        "created": "2026-10-31",
+        "purpose": "original hand-painted overhead circus floor"
+      }
+    }
+  },
+  "visual.environment.foyer": {
+    "kind": "environment",
+    "base": "assets/environment/foyer/",
+    "files": {
+      "albedo": "assets/environment/foyer/floor.webp"
+    },
+    "meta": {
+      "schemaVersion": 1,
+      "id": "visual.environment.foyer",
+      "kind": "environment",
+      "renderMode": "surface",
+      "frame": {
+        "width": 1024,
+        "height": 683
+      },
+      "files": {
+        "albedo": "floor.webp"
+      },
+      "colorSpace": "srgb",
+      "fallback": "procedural.environment",
+      "provenance": {
+        "source": "image_gen",
+        "created": "2026-10-31",
+        "purpose": "original hand-painted overhead circus floor"
+      }
+    }
+  },
+  "visual.environment.gallery": {
+    "kind": "environment",
+    "base": "assets/environment/gallery/",
+    "files": {
+      "albedo": "assets/environment/gallery/floor.webp"
+    },
+    "meta": {
+      "schemaVersion": 1,
+      "id": "visual.environment.gallery",
+      "kind": "environment",
+      "renderMode": "surface",
+      "frame": {
+        "width": 1024,
+        "height": 1024
+      },
+      "files": {
+        "albedo": "floor.webp"
+      },
+      "colorSpace": "srgb",
+      "fallback": "procedural.environment",
+      "provenance": {
+        "source": "image_gen",
+        "created": "2026-10-31",
+        "purpose": "original hand-painted overhead circus floor"
+      }
+    }
+  },
+  "visual.environment.props": {
+    "kind": "environment",
+    "base": "assets/environment/props/",
+    "files": {
+      "albedo": "assets/environment/props/floor.webp"
+    },
+    "meta": {
+      "schemaVersion": 1,
+      "id": "visual.environment.props",
+      "kind": "environment",
+      "renderMode": "surface",
+      "frame": {
+        "width": 1024,
+        "height": 1024
+      },
+      "files": {
+        "albedo": "floor.webp"
+      },
+      "colorSpace": "srgb",
+      "fallback": "procedural.environment",
+      "provenance": {
+        "source": "image_gen",
+        "created": "2026-10-31",
+        "purpose": "original hand-painted overhead circus floor"
+      }
+    }
+  },
+  "visual.environment.understage": {
+    "kind": "environment",
+    "base": "assets/environment/understage/",
+    "files": {
+      "albedo": "assets/environment/understage/floor.webp"
+    },
+    "meta": {
+      "schemaVersion": 1,
+      "id": "visual.environment.understage",
+      "kind": "environment",
+      "renderMode": "surface",
+      "frame": {
+        "width": 1024,
+        "height": 1024
+      },
+      "files": {
+        "albedo": "floor.webp"
+      },
+      "colorSpace": "srgb",
+      "fallback": "procedural.environment",
+      "provenance": {
+        "source": "image_gen",
+        "created": "2026-10-31",
+        "purpose": "original hand-painted overhead circus floor"
+      }
+    }
   }
 } as Record<string,{kind:string;base:string;files:Record<string,string>;meta:Record<string,unknown>}>;

@@ -9,6 +9,25 @@ type Atlas={texture:THREE.Texture;frames:number;rows:number};
 export class AssetResolver {
   readonly requests=new Map<string,number>();readonly fallback=new Set<string>();
   private cache=new Map<string,Atlas>();private loader=new THREE.TextureLoader();
+  environment(visualId:string):THREE.Texture {
+    const key=`${visualId}:albedo`;
+    const found=this.cache.get(key);if(found)return found.texture;
+    const canvas=document.createElement('canvas');canvas.width=canvas.height=64;
+    const c=canvas.getContext('2d')!;c.fillStyle='#51403a';c.fillRect(0,0,64,64);
+    c.strokeStyle='#332b2c';for(let y=0;y<64;y+=16){c.beginPath();c.moveTo(0,y);c.lineTo(64,y);c.stroke();}
+    const fallback=new THREE.CanvasTexture(canvas);fallback.colorSpace=THREE.SRGBColorSpace;
+    const atlas:Atlas={texture:fallback,frames:1,rows:1};this.cache.set(key,atlas);
+    const file=assetCatalog[visualId]?.files.albedo;
+    this.requests.set(key,1);
+    if(file)this.loader.load(new URL(file,document.baseURI).href,texture=>{
+      texture.colorSpace=THREE.SRGBColorSpace;
+      texture.anisotropy=4;
+      texture.wrapS=texture.wrapT=THREE.ClampToEdgeWrapping;
+      atlas.texture=texture;this.fallback.delete(key);
+    },undefined,()=>{this.fallback.add(key);console.warn(`Environment ${visualId}: using procedural fallback.`);});
+    else this.fallback.add(key);
+    return atlas.texture;
+  }
   character(def:CharacterDef|{visualId:string;color:string;accent:string;name:string},clip:string):Atlas{
     const key=`${def.visualId}:${clip}`;this.requests.set(key,(this.requests.get(key)??0)+1);
     const found=this.cache.get(key);if(found)return found;
