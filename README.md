@@ -2,7 +2,7 @@
 
 Локальна містична гра про останню виставу цирку. Після видіння гравець досліджує сім зон, домовляється про перестановку трьох номерів, спостерігає, як цирк зникає, і готує один із двох способів пережити фінал із колесом та ножами. Зараз художні файли замінюють створені кодом анімовані заглушки.
 
-**Готова гра для Windows x64:** [завантажити portable-версію з релізу](https://github.com/XxKotfeJxX/last-applause-game/releases/latest). Встановлення Node.js для запуску `.exe` не потрібне.
+**Готова гра для Windows x64:** [завантажити portable `.exe`](https://github.com/XxKotfeJxX/last-applause-game/releases/latest/download/last-applause-1.0.0-windows-x64.exe). [Опис релізу](https://github.com/XxKotfeJxX/last-applause-game/releases/latest). Встановлення Node.js для запуску `.exe` не потрібне.
 
 ![Початкова сцена гри](docs/preview.png)
 
