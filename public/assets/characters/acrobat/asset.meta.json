@@ -1,0 +1,79 @@
+{
+  "schemaVersion": 1,
+  "id": "visual.character.acrobat",
+  "kind": "character",
+  "renderMode": "uprightBillboard",
+  "worldHeight": 2,
+  "frame": {
+    "width": 128,
+    "height": 192,
+    "anchorPx": [
+      64,
+      176
+    ]
+  },
+  "directions": [
+    "south",
+    "west",
+    "east",
+    "north"
+  ],
+  "clips": {
+    "idle": {
+      "file": "idle.png",
+      "frameCount": 4,
+      "fps": 4,
+      "loop": true
+    },
+    "walk": {
+      "file": "walk.png",
+      "frameCount": 6,
+      "fps": 8,
+      "loop": true
+    },
+    "talk": {
+      "file": "talk.png",
+      "frameCount": 4,
+      "fps": 6,
+      "loop": true
+    },
+    "interact": {
+      "file": "interact.png",
+      "frameCount": 6,
+      "fps": 8,
+      "loop": false
+    },
+    "react": {
+      "file": "react.png",
+      "frameCount": 4,
+      "fps": 8,
+      "loop": false
+    },
+    "perform": {
+      "file": "perform.png",
+      "frameCount": 8,
+      "fps": 8,
+      "loop": true
+    }
+  },
+  "defaultSocketsPx": {
+    "handRight": [
+      94,
+      112
+    ],
+    "handLeft": [
+      34,
+      112
+    ],
+    "head": [
+      64,
+      38
+    ]
+  },
+  "fallback": "procedural.character",
+  "placeholderStyle": {
+    "bodyColor": "#e7a5a7",
+    "accentColor": "#663647",
+    "silhouette": "coat"
+  }
+}

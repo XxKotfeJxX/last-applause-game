@@ -1,0 +1,23 @@
+{
+  "schemaVersion": 1,
+  "id": "visual.item.stage-double",
+  "kind": "item",
+  "renderMode": "uprightBillboard",
+  "worldSize": [
+    1.4,
+    2.1
+  ],
+  "frame": {
+    "width": 128,
+    "height": 128,
+    "anchorPx": [
+      64,
+      118
+    ]
+  },
+  "files": {
+    "world": "world.png",
+    "icon": "icon.png"
+  },
+  "fallback": "procedural.item"
+}

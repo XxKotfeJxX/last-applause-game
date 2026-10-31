@@ -1,0 +1,15 @@
+{
+  "schemaVersion":1,
+  "lines":[
+    {"id":"dialogue.ringmaster.0","actorId":"npc.ringmaster","text":"«Вперше й востаннє», — каже конферансьє. «Заміни оголошую лише після згоди обох артистів».","priority":0},
+    {"id":"dialogue.ringmaster.3","actorId":"npc.ringmaster","text":"«У залі нікого не лишилося. У програмі, на жаль, іще є ви». Він чекає останньої перевірки.","minDecay":3,"priority":3},
+    {"id":"dialogue.illusionist.0","actorId":"npc.illusionist","text":"«Моє ім’я вже погано тримається на афіші. Дайте мені ранній номер — покажу, як зникають люди».","priority":0},
+    {"id":"dialogue.illusionist.1","actorId":"npc.illusionist","text":"«Бачили вихід за дзеркалом? Тепер розумієте, чому я не боюся завіси».","requiresFact":"fact.hidden_passage","priority":2},
+    {"id":"dialogue.thrower.0","actorId":"npc.knife_thrower","text":"«Ножі самі не приходять. Спершу перевірка, потім кидок».","priority":0},
+    {"id":"dialogue.acrobat.0","actorId":"npc.acrobat","text":"«Спершу перевірте лебідку. Повітря не пробачає бухгалтерських помилок».","priority":0},
+    {"id":"dialogue.acrobat.1","actorId":"npc.acrobat","text":"«Противага тримає. Якщо треба — виступлю раніше».","requiresMechanism":"rigPrepared","priority":2},
+    {"id":"dialogue.stagehand.0","actorId":"npc.stagehand","text":"«У черзі колесо й лебідка. Мене вистачить на обидва, якщо цирк не зникне швидше».","priority":0},
+    {"id":"dialogue.quartermaster.0","actorId":"npc.quartermaster","text":"«Сценічні ножі видаю під запис. Фарбу беріть, тільки не на журнал».","priority":0},
+    {"id":"dialogue.quartermaster.1","actorId":"npc.quartermaster","text":"«Сценічний комплект записаний на вас. Повернення — до кінця світу, будь ласка».","requiresFact":"fact.safe_issued","priority":2}
+  ]
+}

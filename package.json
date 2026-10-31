@@ -1,0 +1,70 @@
+{
+  "name": "last-applause",
+  "version": "1.0.0",
+  "description": "Локальна містична гра про останню виставу цирку",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=20.19.0"
+  },
+  "scripts": {
+    "dev:web": "vite",
+    "dev:desktop": "node tools/dev-desktop.mjs",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint src tests tools --ext .ts,.mjs",
+    "test": "vitest run tests/unit tests/integration",
+    "test:e2e": "playwright test",
+    "content:sync": "node tools/content/sync.mjs",
+    "content:validate": "node tools/content/validate.mjs",
+    "assets:validate": "node tools/assets/validate.mjs",
+    "assets:preview": "vite --open /asset-preview.html",
+    "assets:proof": "node tools/assets/proof.mjs",
+    "new:npc": "node tools/content/new.mjs npc",
+    "new:item": "node tools/content/new.mjs item",
+    "new:act": "node tools/content/new.mjs act",
+    "build:web": "npm run content:sync && npm run content:validate && npm run assets:validate && npm run typecheck && vite build",
+    "build:desktop": "npm run build:web && tsc -p electron/tsconfig.json",
+    "pack:win": "npm run build:desktop && electron-builder --win portable --x64",
+    "check": "npm run content:sync && npm run content:validate && npm run assets:validate && npm run typecheck && npm run lint && npm test"
+  },
+  "dependencies": {
+    "three": "0.180.0"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.55.0",
+    "@types/node": "22.18.6",
+    "@types/three": "0.180.0",
+    "@typescript-eslint/parser": "^8.46.0",
+    "electron": "38.1.2",
+    "electron-builder": "26.0.12",
+    "eslint": "9.36.0",
+    "typescript": "5.9.2",
+    "vite": "7.1.7",
+    "vitest": "3.2.4"
+  },
+  "main": "dist-electron/main.cjs",
+  "build": {
+    "appId": "ua.lastapplause.game",
+    "productName": "Останні оплески",
+    "directories": {
+      "output": "release"
+    },
+    "files": [
+      "dist-web/**/*",
+      "dist-electron/**/*",
+      "package.json"
+    ],
+    "asar": true,
+    "compression": "normal",
+    "win": {
+      "target": [
+        {
+          "target": "portable",
+          "arch": [
+            "x64"
+          ]
+        }
+      ]
+    }
+  }
+}

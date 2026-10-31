@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "items": [
+    {"id":"item.hero_mask","name":"Маска з видіння","visualId":"visual.item.hero-mask","capabilities":["capability.identity_mask"],"carryClass":"small","decayPolicy":"persistent","roleId":"role.hero_mask","startArea":"zone.dressing","x":-14,"z":-10},
+    {"id":"item.stage_double","name":"Сценічний двійник","visualId":"visual.item.stage-double","capabilities":["capability.human_silhouette","capability.wear_costume","capability.mount_on_wheel"],"carryClass":"large","decayPolicy":"persistent","roleId":"role.stage_double","startArea":"zone.props","x":17,"z":-11},
+    {"id":"item.costume","name":"Костюм останнього номера","visualId":"visual.item.costume","capabilities":["capability.costume"],"carryClass":"small","decayPolicy":"persistent","roleId":"role.costume","startArea":"zone.dressing","x":-17,"z":-10},
+    {"id":"item.safe_knives","name":"Сценічні ножі","visualId":"visual.item.safe-knives","capabilities":["capability.safe_projectiles"],"carryClass":"small","decayPolicy":"persistent","roleId":"role.safe_projectiles","startArea":"zone.props","x":16,"z":-13},
+    {"id":"item.live_knives","name":"Бойові ножі","visualId":"visual.item.live-knives","capabilities":["capability.live_projectiles"],"carryClass":"small","decayPolicy":"persistent","roleId":"role.live_projectiles","startArea":"zone.props","x":14,"z":-13},
+    {"id":"item.stage_blood","name":"Сценічна фарба","visualId":"visual.item.stage-blood","capabilities":["capability.stage_blood"],"carryClass":"small","decayPolicy":"persistent","roleId":"role.stage_blood","startArea":"zone.props","x":13,"z":-10},
+    {"id":"item.wrench","name":"Ключ механіка","visualId":"visual.item.wrench","capabilities":["capability.tool"],"carryClass":"small","decayPolicy":"local","roleId":"role.mechanic_tool","startArea":"zone.props","x":17,"z":-13}
+  ]
+}

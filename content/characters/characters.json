@@ -1,0 +1,11 @@
+{
+  "schemaVersion": 1,
+  "characters": [
+    {"id":"npc.ringmaster","name":"Конферансьє","visualId":"visual.character.ringmaster","color":"#e6b65c","accent":"#8a2835","start":"arena","patrol":["arena","backstage","arena"],"roleIds":["role.ringmaster"],"actIds":[]},
+    {"id":"npc.illusionist","name":"Северин","visualId":"visual.character.illusionist","color":"#9d79b3","accent":"#2c2443","start":"dressing","patrol":["dressing","props","backstage"],"roleIds":["role.illusionist"],"actIds":["act.illusion"]},
+    {"id":"npc.knife_thrower","name":"Марко","visualId":"visual.character.knife-thrower","color":"#a8c0c7","accent":"#344450","start":"backstage","patrol":["backstage","arena","props"],"roleIds":["role.thrower"],"actIds":["act.knives"]},
+    {"id":"npc.acrobat","name":"Лада","visualId":"visual.character.acrobat","color":"#e7a5a7","accent":"#663647","start":"gallery","patrol":["gallery","dressing","arena"],"roleIds":["role.acrobat"],"actIds":["act.aerial"]},
+    {"id":"npc.stagehand","name":"Гнат","visualId":"visual.character.stagehand","color":"#c39866","accent":"#3e4c47","start":"understage","patrol":["understage","props","gallery","arena"],"roleIds":["role.mechanic"],"actIds":[]},
+    {"id":"npc.quartermaster","name":"Роза","visualId":"visual.character.quartermaster","color":"#c68a8b","accent":"#5e3544","start":"props","patrol":["props","backstage","props"],"roleIds":["role.quartermaster"],"actIds":[]}
+  ]
+}

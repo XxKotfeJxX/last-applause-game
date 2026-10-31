@@ -1,0 +1,4 @@
+{
+  "id":"pack.last-applause.p0","version":1,
+  "roles":{"role.hero_mask":"item.hero_mask","role.stage_double":"item.stage_double","role.costume":"item.costume","role.safe_projectiles":"item.safe_knives","role.live_projectiles":"item.live_knives","role.stage_blood":"item.stage_blood","role.mechanic":"npc.stagehand"}
+}
