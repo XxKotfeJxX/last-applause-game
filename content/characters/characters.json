@@ -17,7 +17,8 @@
         "role.ringmaster"
       ],
       "actIds": [],
-      "speechProfileId": "speech.tragic_blank_verse"
+      "speechProfileId": "speech.tragic_blank_verse",
+      "modelId": "ringmaster"
     },
     {
       "id": "npc.illusionist",
@@ -37,7 +38,8 @@
       "actIds": [
         "act.illusion"
       ],
-      "speechProfileId": "speech.baroque"
+      "speechProfileId": "speech.baroque",
+      "modelId": "illusionist"
     },
     {
       "id": "npc.knife_thrower",
@@ -57,7 +59,8 @@
       "actIds": [
         "act.knives"
       ],
-      "speechProfileId": "speech.percussive_rap"
+      "speechProfileId": "speech.percussive_rap",
+      "modelId": "knife-thrower"
     },
     {
       "id": "npc.acrobat",
@@ -77,7 +80,8 @@
       "actIds": [
         "act.aerial"
       ],
-      "speechProfileId": "speech.lyric_amphibrach"
+      "speechProfileId": "speech.lyric_amphibrach",
+      "modelId": "acrobat"
     },
     {
       "id": "npc.stagehand",
@@ -96,7 +100,8 @@
         "role.mechanic"
       ],
       "actIds": [],
-      "speechProfileId": "speech.technical_iamb"
+      "speechProfileId": "speech.technical_iamb",
+      "modelId": "stagehand"
     },
     {
       "id": "npc.quartermaster",
@@ -114,7 +119,8 @@
         "role.quartermaster"
       ],
       "actIds": [],
-      "speechProfileId": "speech.folk_kolomyika"
+      "speechProfileId": "speech.folk_kolomyika",
+      "modelId": "quartermaster"
     }
   ]
 }

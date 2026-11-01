@@ -9,10 +9,11 @@ for(const kind of ['characters','items','environment','ui','audio']){
     const path=join(root,kind,dir.name);let meta;
     try{meta=JSON.parse(await readFile(join(path,'asset.meta.json'),'utf8'));}catch(e){errors.push(`${path}/asset.meta.json: ${e.message}`);continue;}
     if(meta.schemaVersion!==1||!meta.id||meta.kind!==kind.replace(/s$/,''))errors.push(`${path}/asset.meta.json: schemaVersion/id/kind invalid`);
+    if(meta.renderMode==='proceduralCharacter'){const catalog=JSON.parse(await readFile(join(process.cwd(),'content/models/catalog.json'),'utf8'));if(!catalog.characters.includes(meta.modelId))errors.push(`${path}: unknown character modelId ${meta.modelId}`);try{await readFile(join(process.cwd(),meta.geometrySource),'utf8');}catch{errors.push(`${path}: missing character geometry source`);}}
     const frame=meta.frame;if(frame&&(!Number.isInteger(frame.width)||!Number.isInteger(frame.height)||frame.width<=0||frame.height<=0||frame.anchorPx?.[0]<0||frame.anchorPx?.[0]>=frame.width||frame.anchorPx?.[1]<0||frame.anchorPx?.[1]>=frame.height))errors.push(`${path}: invalid frame or anchor`);
     if(meta.kind==='character'){if(!(meta.worldHeight>0))errors.push(`${path}: worldHeight must be positive`);for(const [socket,point] of Object.entries(meta.defaultSocketsPx??{}))if(!Array.isArray(point)||point.length!==2||point.some((v,i)=>!Number.isFinite(v)||v<0||v>=(i===0?frame.width:frame.height)))errors.push(`${path}: invalid socket ${socket}`);}
     if(meta.kind==='character'&&JSON.stringify(meta.directions)!==JSON.stringify(['south','west','east','north']))errors.push(`${path}: directions must be south,west,east,north`);
-    const files=meta.kind==='character'?Object.fromEntries(Object.entries(meta.clips??{}).map(([key,c])=>[key,c.file])):meta.files??{};
+    const files=meta.kind==='character'&&meta.renderMode==='proceduralCharacter'?{}:meta.kind==='character'?Object.fromEntries(Object.entries(meta.clips??{}).map(([key,c])=>[key,c.file])):meta.files??{};
     if(meta.kind==='character')for(const [key,clip] of Object.entries(meta.clips??{}))if(!Number.isInteger(clip.frameCount)||clip.frameCount<=0||!(clip.fps>0))errors.push(`${path}: clips.${key} frameCount/fps invalid`);
     for(const [slot,file] of Object.entries(files)){
       if(typeof file!=='string'||file.includes('..')||file.includes('\\')||file.startsWith('/')){errors.push(`${path}: unsafe file for ${slot}`);continue;}

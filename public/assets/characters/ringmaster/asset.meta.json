@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "id": "visual.character.ringmaster",
   "kind": "character",
-  "renderMode": "uprightBillboard",
+  "renderMode": "proceduralCharacter",
   "worldHeight": 2,
   "frame": {
     "width": 128,
@@ -75,5 +75,8 @@
     "bodyColor": "#e6b65c",
     "accentColor": "#8a2835",
     "silhouette": "coat"
-  }
+  },
+  "modelId": "ringmaster",
+  "geometrySource": "src/render/characters.ts",
+  "legacySpriteMode": "uprightBillboard"
 }

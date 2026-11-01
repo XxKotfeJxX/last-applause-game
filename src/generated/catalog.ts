@@ -8,7 +8,7 @@ export const assetCatalog = {
       "schemaVersion": 1,
       "id": "visual.character.acrobat",
       "kind": "character",
-      "renderMode": "uprightBillboard",
+      "renderMode": "proceduralCharacter",
       "worldHeight": 2,
       "frame": {
         "width": 128,
@@ -81,7 +81,10 @@ export const assetCatalog = {
         "bodyColor": "#e7a5a7",
         "accentColor": "#663647",
         "silhouette": "coat"
-      }
+      },
+      "modelId": "acrobat",
+      "geometrySource": "src/render/characters.ts",
+      "legacySpriteMode": "uprightBillboard"
     }
   },
   "visual.character.hero": {
@@ -92,7 +95,7 @@ export const assetCatalog = {
       "schemaVersion": 1,
       "id": "visual.character.hero",
       "kind": "character",
-      "renderMode": "uprightBillboard",
+      "renderMode": "proceduralCharacter",
       "worldHeight": 2,
       "frame": {
         "width": 128,
@@ -165,7 +168,10 @@ export const assetCatalog = {
         "bodyColor": "#e6dac0",
         "accentColor": "#802c3d",
         "silhouette": "coat"
-      }
+      },
+      "modelId": "hero",
+      "geometrySource": "src/render/characters.ts",
+      "legacySpriteMode": "uprightBillboard"
     }
   },
   "visual.character.illusionist": {
@@ -176,7 +182,7 @@ export const assetCatalog = {
       "schemaVersion": 1,
       "id": "visual.character.illusionist",
       "kind": "character",
-      "renderMode": "uprightBillboard",
+      "renderMode": "proceduralCharacter",
       "worldHeight": 2,
       "frame": {
         "width": 128,
@@ -249,7 +255,10 @@ export const assetCatalog = {
         "bodyColor": "#9d79b3",
         "accentColor": "#2c2443",
         "silhouette": "coat"
-      }
+      },
+      "modelId": "illusionist",
+      "geometrySource": "src/render/characters.ts",
+      "legacySpriteMode": "uprightBillboard"
     }
   },
   "visual.character.knife-thrower": {
@@ -260,7 +269,7 @@ export const assetCatalog = {
       "schemaVersion": 1,
       "id": "visual.character.knife-thrower",
       "kind": "character",
-      "renderMode": "uprightBillboard",
+      "renderMode": "proceduralCharacter",
       "worldHeight": 2,
       "frame": {
         "width": 128,
@@ -333,7 +342,10 @@ export const assetCatalog = {
         "bodyColor": "#a8c0c7",
         "accentColor": "#344450",
         "silhouette": "coat"
-      }
+      },
+      "modelId": "knife-thrower",
+      "geometrySource": "src/render/characters.ts",
+      "legacySpriteMode": "uprightBillboard"
     }
   },
   "visual.character.quartermaster": {
@@ -344,7 +356,7 @@ export const assetCatalog = {
       "schemaVersion": 1,
       "id": "visual.character.quartermaster",
       "kind": "character",
-      "renderMode": "uprightBillboard",
+      "renderMode": "proceduralCharacter",
       "worldHeight": 2,
       "frame": {
         "width": 128,
@@ -417,7 +429,10 @@ export const assetCatalog = {
         "bodyColor": "#c68a8b",
         "accentColor": "#5e3544",
         "silhouette": "coat"
-      }
+      },
+      "modelId": "quartermaster",
+      "geometrySource": "src/render/characters.ts",
+      "legacySpriteMode": "uprightBillboard"
     }
   },
   "visual.character.ringmaster": {
@@ -428,7 +443,7 @@ export const assetCatalog = {
       "schemaVersion": 1,
       "id": "visual.character.ringmaster",
       "kind": "character",
-      "renderMode": "uprightBillboard",
+      "renderMode": "proceduralCharacter",
       "worldHeight": 2,
       "frame": {
         "width": 128,
@@ -501,7 +516,10 @@ export const assetCatalog = {
         "bodyColor": "#e6b65c",
         "accentColor": "#8a2835",
         "silhouette": "coat"
-      }
+      },
+      "modelId": "ringmaster",
+      "geometrySource": "src/render/characters.ts",
+      "legacySpriteMode": "uprightBillboard"
     }
   },
   "visual.character.stagehand": {
@@ -512,7 +530,7 @@ export const assetCatalog = {
       "schemaVersion": 1,
       "id": "visual.character.stagehand",
       "kind": "character",
-      "renderMode": "uprightBillboard",
+      "renderMode": "proceduralCharacter",
       "worldHeight": 2,
       "frame": {
         "width": 128,
@@ -585,7 +603,10 @@ export const assetCatalog = {
         "bodyColor": "#c39866",
         "accentColor": "#3e4c47",
         "silhouette": "coat"
-      }
+      },
+      "modelId": "stagehand",
+      "geometrySource": "src/render/characters.ts",
+      "legacySpriteMode": "uprightBillboard"
     }
   },
   "visual.item.costume": {

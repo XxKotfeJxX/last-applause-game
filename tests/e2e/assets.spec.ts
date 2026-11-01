@@ -1,7 +1,7 @@
 import { expect,test } from '@playwright/test';
 test('fixture alpha, wall dimensions and metadata-aware preview controls',async({page})=>{
  const errors:string[]=[];page.on('pageerror',e=>errors.push(e.message));
- await page.goto('/asset-preview.html');await expect(page.getByRole('heading',{name:'Перегляд пакетів асетів'})).toBeVisible();
+ await page.goto('/asset-preview.html');await expect(page.getByRole('heading',{name:'Майстерня персонажів і реквізиту'})).toBeVisible();
  const assets=await page.evaluate(async()=>{
   const source='/src/generated/catalog.ts';const {assetCatalog}=await import(source) as typeof import('../../src/generated/catalog');
   const result=[];
@@ -10,6 +10,6 @@ test('fixture alpha, wall dimensions and metadata-aware preview controls',async(
   }return result;
  });
  expect(assets).toHaveLength(8);for(const a of assets){expect(a.ok).toBe(true);expect(a.frame).toEqual({width:a.width,height:a.height});expect(a.solid).toBeGreaterThan(1000);if(a.id.includes('fixture'))expect(a.clear).toBeGreaterThan(1000);}
- await page.locator('#paused').check();await page.locator('#sockets').uncheck();await page.locator('#zoom').selectOption('1.5');await page.locator('.clip').first().selectOption('interact');await expect(page.locator('.status-text').first()).toContainText('hold');
+ await page.locator('#paused').check();await page.locator('#sockets').uncheck();await page.locator('#zoom').selectOption('1.5');await page.locator('.clip').first().selectOption('interact');await expect(page.locator('.status-text').first()).toContainText('3D-модель');
  await page.screenshot({path:'test-results/asset-preview.png',fullPage:true});expect(errors).toEqual([]);
 });

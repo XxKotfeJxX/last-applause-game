@@ -14,7 +14,7 @@ describe('authoritative world',()=>{
     const s=createWorld(),id='instance.item.live_knives';
     s.player.x=14;s.player.z=-13;expect(execute(s,id,'pickup').ok).toBe(true);
     tickWorld(s,40000);expect(s.items[id].location).toEqual({kind:'actor',actorId:'player',slot:'inventory'});
-    expect(s.actors['npc.knife_thrower'].reaction).toContain('немає');
+    expect(s.actors['npc.knife_thrower'].reaction).toContain('До Рози');
     expect(transferItem(s,id,'world',{kind:'actor',actorId:'npc.stagehand',slot:'inventory'}).ok).toBe(false);
   });
   it('invalidates a scheduled pickup when the plan revision changes',()=>{

@@ -7,7 +7,7 @@ test('new show, visible 3D scene, movement, inspection, journal, save and restor
   await expect(page.locator('#viewport canvas')).toBeVisible();
   await page.screenshot({path:'test-results/start.png'});
   await page.keyboard.press('KeyE');await expect(page.getByRole('heading',{name:'Афіша з видінням'})).toBeVisible();
-  await page.locator('[data-action="inspect"]').click();await expect(page.locator('.dialogue')).toContainText('Афіша');
+  await page.locator('[data-action="inspect"]').click();await expect(page.locator('.dialogue')).toContainText('Маска');
   await page.locator('#overlay [data-ui="close"]').click();
   await page.keyboard.press('KeyQ');await expect(page.getByRole('heading',{name:'Карта пророцтва'})).toBeVisible();await page.locator('#overlay [data-ui="close"]').click();
   await page.keyboard.press('Tab');await expect(page.getByRole('heading',{name:'Реквізит'})).toBeVisible();await page.locator('#overlay [data-ui="close"]').click();
@@ -55,7 +55,7 @@ test('dialogue confirms a swap and the performed act returns to exploration',asy
   await page.locator('[data-action="cue"]').click();
   await page.locator('[data-action="cue"]').click();
   await expect(page.locator('#overlay')).toBeHidden();
-  await expect(page.locator('#decay')).toContainText('Зникнення 1/3');
+  await expect(page.locator('#decay')).toContainText('Розпад: 1/3');
   expect(errors).toEqual([]);
 });
 

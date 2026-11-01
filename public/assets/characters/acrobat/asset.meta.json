@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "id": "visual.character.acrobat",
   "kind": "character",
-  "renderMode": "uprightBillboard",
+  "renderMode": "proceduralCharacter",
   "worldHeight": 2,
   "frame": {
     "width": 128,
@@ -75,5 +75,8 @@
     "bodyColor": "#e7a5a7",
     "accentColor": "#663647",
     "silhouette": "coat"
-  }
+  },
+  "modelId": "acrobat",
+  "geometrySource": "src/render/characters.ts",
+  "legacySpriteMode": "uprightBillboard"
 }

@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "id": "visual.character.illusionist",
   "kind": "character",
-  "renderMode": "uprightBillboard",
+  "renderMode": "proceduralCharacter",
   "worldHeight": 2,
   "frame": {
     "width": 128,
@@ -75,5 +75,8 @@
     "bodyColor": "#9d79b3",
     "accentColor": "#2c2443",
     "silhouette": "coat"
-  }
+  },
+  "modelId": "illusionist",
+  "geometrySource": "src/render/characters.ts",
+  "legacySpriteMode": "uprightBillboard"
 }

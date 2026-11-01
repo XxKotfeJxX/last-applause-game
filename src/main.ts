@@ -55,7 +55,7 @@ function renderOverlay(){
   }
   overlayEl.innerHTML=verse('ui.043', {p0: title, p1: body, p2: buttons});
 }
-function factText(f:string){const map:Record<string,string>={'fact.vision':verse('ui.044'),'fact.cabinet_seen':verse('ui.045'),'fact.hidden_passage':verse('ui.046'),'fact.blackout':verse('ui.047'),'fact.knife_inspection':verse('ui.048'),'fact.safe_issued':verse('ui.049')};return map[f]??f;}
+function factText(f:string){const map:Record<string,string>={'fact.vision':verse('ui.044'),'fact.cabinet_seen':verse('ui.045'),'fact.hidden_passage':verse('ui.046'),'fact.blackout':verse('ui.047'),'fact.knife_inspection':verse('ui.048'),'fact.safe_issued':verse('ui.049')};return map[f]??'Ще одна підказка з-за лаштунків.';}
 function updateHud(){
   document.getElementById('zone')!.textContent=describeArea();const next=world.slots.find(x=>x.status!=='completed');
   document.getElementById('act')!.textContent=next?verse('ui.050', {p0: actById[next.actId].name}):verse('ui.051');
@@ -79,8 +79,8 @@ function doAction(id:string){
   renderOverlay();updateHud();
 }
 function uiAction(action:string){audio.unlock();audio.play('ui');
-  if(action==='new'){world=createWorld();audio.reset();overlay=null;targetId=null;message='';saveWorld('checkpoint',world);renderOverlay();return;}
-  if(action==='load'||action==='retry'){try{const loaded=loadWorld(action==='retry'?'checkpoint':'manual');if(!loaded){toast(verse('ui.059'));return;}world=loaded;audio.reset();overlay=world.mode==='act'||world.mode==='finale'?'stage':null;renderOverlay();toast(verse('ui.060'));}catch(e){toast(verse('ui.061'));}return;}
+  if(action==='new'){world=createWorld();scene.cameraRig.reset();audio.reset();overlay=null;targetId=null;message='';saveWorld('checkpoint',world);renderOverlay();return;}
+  if(action==='load'||action==='retry'){try{const loaded=loadWorld(action==='retry'?'checkpoint':'manual');if(!loaded){toast(verse('ui.059'));return;}world=loaded;scene.cameraRig.reset();audio.reset();overlay=world.mode==='act'||world.mode==='finale'?'stage':null;renderOverlay();toast(verse('ui.060'));}catch(e){toast(verse('ui.061'));}return;}
   if(action==='save'){try{saveWorld('manual',world);toast(verse('ui.062'));}catch(e){toast(verse('ui.063'));}return;}
   if(action==='title'){overlay='intro';renderOverlay();return;}
   if(action==='close')closeOverlay();
@@ -100,6 +100,7 @@ window.addEventListener('keydown',e=>{
   if(['Tab','ArrowUp','ArrowDown','ArrowLeft','ArrowRight','Space'].includes(e.code))e.preventDefault();
   if(e.repeat&&['KeyE','KeyQ','KeyJ','Tab','KeyI','Escape'].includes(e.code))return;
   if(e.code==='Backquote'&&import.meta.env.DEV){devVisible=!devVisible;updateHud();return;}
+  if(overlay===null&&!e.repeat&&['KeyZ','KeyX','KeyC'].includes(e.code)){if(e.code==='KeyC')scene.cameraRig.reset();else scene.cameraRig.rotate(e.code==='KeyZ'?-1:1);return;}
   keys.add(e.code);const action=actionFor(e.code);if(!action)return;
   if(action==='interact'&&overlay===null){const nearest=nearbyTargets(world)[0];if(nearest)openTarget(nearest.id);}
   if(action==='inventory'&&world.mode==='playing'){overlay=overlay==='inventory'?null:'inventory';renderOverlay();}
@@ -113,10 +114,10 @@ document.addEventListener('visibilitychange',()=>{accumulator=0;last=performance
 function loop(now:number){const dt=Math.min(100,now-last);last=now;
   const active=(overlay===null||overlay==='stage')&&!document.hidden&&document.hasFocus();
   if(active){let dx=0,dz=0;if(keys.has('KeyW')||keys.has('ArrowUp'))dz--;if(keys.has('KeyS')||keys.has('ArrowDown'))dz++;if(keys.has('KeyA')||keys.has('ArrowLeft'))dx--;if(keys.has('KeyD')||keys.has('ArrowRight'))dx++;
-    movePlayer(world,dx,dz,dt);accumulator+=dt;while(accumulator>=100){tickWorld(world,100);accumulator-=100;}audio.update(world);
+    const movement=scene.cameraRig.movement(dx,dz);movePlayer(world,movement.x,movement.z,dt);accumulator+=dt;while(accumulator>=100){tickWorld(world,100);accumulator-=100;}audio.update(world);
     if(world.mode==='dead'||world.mode==='won'){overlay='end';renderOverlay();}
   }else accumulator=0;
-  scene.update(world,dt);if(now>toastTimer)toastEl.hidden=true;
+  scene.update(world,dt,overlay==='target'&&targetId&&world.actors[targetId]?targetId:undefined);if(now>toastTimer)toastEl.hidden=true;
   if(world.mode==='finale'&&overlay==='stage'){const counter=document.getElementById('countdown');if(counter)counter.textContent=String(Math.max(0,Math.ceil((world.finaleDeadline-world.gameTimeMs)/1000)));}
   if(Math.floor(now/250)!==Math.floor((now-dt)/250))updateHud();requestAnimationFrame(loop);
 }

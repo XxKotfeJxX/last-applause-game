@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "id": "visual.character.hero",
   "kind": "character",
-  "renderMode": "uprightBillboard",
+  "renderMode": "proceduralCharacter",
   "worldHeight": 2,
   "frame": {
     "width": 128,
@@ -75,5 +75,8 @@
     "bodyColor": "#e6dac0",
     "accentColor": "#802c3d",
     "silhouette": "coat"
-  }
+  },
+  "modelId": "hero",
+  "geometrySource": "src/render/characters.ts",
+  "legacySpriteMode": "uprightBillboard"
 }

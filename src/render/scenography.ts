@@ -5,6 +5,7 @@ import type { WorldState } from '../domain/types';
 import { mapObjects,walls,corridorSlope,corridorDeckSections,surfaceHeight,type MapObject } from '../world/layout';
 import { objectPresent } from '../simulation/navigation';
 import { ModelFactory } from './models';
+import { blocksView } from './camera';
 import type { AssetResolver } from './assets';
 export interface AreaArt {visualId:string;wallVisualId:string;wallColor:string;trimColor:string;accentColor:string;theme:string}
 export const areaArt=artJson.areas as Record<string,AreaArt>;
@@ -26,22 +27,23 @@ export function inlayGeometry(x:number,z:number,w:number,d:number):T.BufferGeome
  const vertices:number[]=[];for(const [dx,dz] of [[-w/2,-d/2],[w/2,-d/2],[w/2,d/2],[-w/2,d/2]])vertices.push(x+dx,surfaceHeight(x+dx,z+dz)+.008,z+dz);
  const g=new T.BufferGeometry();g.setAttribute('position',new T.Float32BufferAttribute(vertices,3));g.setIndex([0,2,1,0,3,2]);g.computeVertexNormals();return g;
 }
-type Batch={mesh:T.InstancedMesh;entries:{matrix:T.Matrix4;object:MapObject}[]};
+type Batch={mesh:T.InstancedMesh;ghost:T.InstancedMesh;entries:{matrix:T.Matrix4;object:MapObject}[]};
 export class Scenography{
  readonly factory=new ModelFactory();readonly models=new Map<string,T.Group>();readonly wheelMount:T.Group;
+ private blockers:{meshes:T.Mesh[];box:T.Box3}[]=[];private faded=new Map<T.Material,T.Material>();private cutawayKey='';
  private floorMaterials=new Map<string,T.MeshStandardMaterial>();private painted:{mat:T.MeshStandardMaterial;id:string}[]=[];
  private batches:Batch[]=[];private dynamicObjects=new Set<string>();private lastDecay='';private lastProgram='';private boardCanvas:HTMLCanvasElement;private boardTexture:T.CanvasTexture;
  constructor(private scene:T.Scene,private assets:AssetResolver){
   for(const a of worldData.areas){
    const body=new T.Mesh(floorBaseGeometry(a.w,a.d),this.factory.material(a.color));body.position.set(a.x,a.floorY-.175,a.z);body.userData.floorBody=true;scene.add(body);
    const mat=new T.MeshStandardMaterial({map:assets.environment(areaArt[a.id].visualId),roughness:1});this.floorMaterials.set(a.id,mat);this.painted.push({mat,id:areaArt[a.id].visualId});
-   const floor=new T.Mesh(new T.PlaneGeometry(a.w,a.d),mat);floor.rotation.x=-Math.PI/2;floor.position.set(a.x,a.floorY,a.z);floor.userData.surfaceArea=a.id;scene.add(floor);
+   const floor=new T.Mesh(new T.PlaneGeometry(a.w,a.d),mat);floor.rotation.x=-Math.PI/2;floor.position.set(a.x,a.floorY,a.z);floor.userData.surfaceArea=a.id;scene.add(floor);if(a.floorY>0)this.blockers.push({meshes:[body,floor],box:new T.Box3().setFromObject(body)});
   }
   for(const wall of walls){
    const mat=new T.MeshStandardMaterial({map:assets.environment(areaArt[wall.area].wallVisualId),roughness:.9});this.painted.push({mat,id:areaArt[wall.area].wallVisualId});
    const geo=new T.BoxGeometry(wall.w,wall.h,wall.d),uv=geo.attributes.uv;for(let n=0;n<uv.count;n++)uv.setX(n,uv.getX(n)*Math.max(wall.w,wall.d)/4);
    const mesh=new T.Mesh(geo,mat);mesh.position.set(wall.x,wall.floorY+wall.h/2,wall.z);mesh.name=wall.id;scene.add(mesh);
-   this.factory.box(scene,wall.w+.04,.06,wall.d+.04,areaArt[wall.area].trimColor,wall.x,wall.floorY+wall.h+.015,wall.z,true);
+   const cap=this.factory.box(scene,wall.w+.04,.06,wall.d+.04,areaArt[wall.area].trimColor,wall.x,wall.floorY+wall.h+.015,wall.z,true);this.blockers.push({meshes:[mesh,cap],box:new T.Box3().setFromObject(mesh).expandByScalar(.03)});
   }
   for(const c of worldData.corridors){
    const axis=corridorSlope(c).axis;
@@ -63,7 +65,20 @@ export class Scenography{
  private batchStatic(){
   const groups=new Map<string,{geometry:T.BufferGeometry;material:T.Material;entries:{matrix:T.Matrix4;object:MapObject}[]}>();
   for(const o of mapObjects){if(this.dynamicObjects.has(o.id))continue;const model=this.models.get(o.id)!;model.updateMatrixWorld(true);model.traverse(child=>{if(!(child instanceof T.Mesh)||child.userData.dynamic)return;const material=child.material as T.Material,key=child.geometry.uuid+material.uuid;let batch=groups.get(key);if(!batch){batch={geometry:child.geometry,material,entries:[]};groups.set(key,batch);}batch.entries.push({matrix:child.matrixWorld.clone(),object:o});child.visible=false;});}
-  for(const b of groups.values()){const mesh=new T.InstancedMesh(b.geometry,b.material,b.entries.length);b.entries.forEach((v,i)=>mesh.setMatrixAt(i,v.matrix));mesh.computeBoundingSphere();this.scene.add(mesh);this.batches.push({mesh,entries:b.entries});}
+  for(const b of groups.values()){const mesh=new T.InstancedMesh(b.geometry,b.material,b.entries.length);b.entries.forEach((v,i)=>mesh.setMatrixAt(i,v.matrix));mesh.computeBoundingSphere();const ghost=new T.InstancedMesh(b.geometry,this.fadeMaterial(b.material),b.entries.length);const zero=new T.Matrix4().makeScale(0,0,0);b.entries.forEach((_,i)=>ghost.setMatrixAt(i,zero));ghost.boundingSphere=mesh.boundingSphere?.clone()??null;ghost.visible=false;this.scene.add(mesh,ghost);this.batches.push({mesh,ghost,entries:b.entries});}
+ }
+ private fadeMaterial(material:T.Material){let faded=this.faded.get(material);if(!faded){faded=material.clone();faded.transparent=true;faded.opacity=.14;faded.depthWrite=false;this.faded.set(material,faded);}if(material instanceof T.MeshStandardMaterial&&faded instanceof T.MeshStandardMaterial){if(faded.map!==material.map){faded.map=material.map;faded.needsUpdate=true;}faded.color.copy(material.color);}return faded;}
+ private fadeMesh(mesh:T.Mesh,fade:boolean){const original=(mesh.userData.originalMaterial??mesh.material) as T.Material;mesh.userData.originalMaterial=original;mesh.material=fade?this.fadeMaterial(original):original;}
+ cutaway(s:WorldState,eye:T.Vector3,focus:T.Vector3){
+  for(const b of this.blockers){const fade=blocksView(b.box,eye,focus);for(const mesh of b.meshes)this.fadeMesh(mesh,fade);}
+  const hidden=new Set<string>();
+  for(const o of mapObjects){if(!objectPresent(s,o))continue;const y=surfaceHeight(o.x,o.z)+(o.y??0),box=new T.Box3(new T.Vector3(o.x-o.w/2,y,o.z-o.d/2),new T.Vector3(o.x+o.w/2,y+o.h,o.z+o.d/2));if(blocksView(box,eye,focus))hidden.add(o.id);}
+  for(const id of this.dynamicObjects){const model=this.models.get(id)!;model.traverse(m=>{if(m instanceof T.Mesh)this.fadeMesh(m,hidden.has(id));});}
+  // Dynamic board lettering must fade together with its batched frame.
+  for(const [id,model] of this.models)if(!this.dynamicObjects.has(id))model.traverse(m=>{if(m instanceof T.Mesh&&m.userData.dynamic)this.fadeMesh(m,hidden.has(id));});
+  const key=JSON.stringify(s.areaStates)+[...hidden].sort().join('|');if(key===this.cutawayKey)return;this.cutawayKey=key;
+  const zero=new T.Matrix4().makeScale(0,0,0);
+  for(const b of this.batches){let opaqueCount=0,ghostCount=0;b.entries.forEach((e,i)=>{const present=objectPresent(s,e.object),fade=hidden.has(e.object.id);if(present){if(fade)ghostCount++;else opaqueCount++;}b.mesh.setMatrixAt(i,present&&!fade?e.matrix:zero);b.ghost.setMatrixAt(i,present&&fade?e.matrix:zero);});b.mesh.visible=opaqueCount>0;b.ghost.visible=ghostCount>0;b.mesh.instanceMatrix.needsUpdate=true;b.ghost.instanceMatrix.needsUpdate=true;}
  }
  update(s:WorldState){
   for(const p of this.painted){const map=this.assets.environment(p.id);if(p.mat.map!==map){p.mat.map=map;p.mat.needsUpdate=true;}}

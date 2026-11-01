@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "id": "visual.character.quartermaster",
   "kind": "character",
-  "renderMode": "uprightBillboard",
+  "renderMode": "proceduralCharacter",
   "worldHeight": 2,
   "frame": {
     "width": 128,
@@ -75,5 +75,8 @@
     "bodyColor": "#c68a8b",
     "accentColor": "#5e3544",
     "silhouette": "coat"
-  }
+  },
+  "modelId": "quartermaster",
+  "geometrySource": "src/render/characters.ts",
+  "legacySpriteMode": "uprightBillboard"
 }
