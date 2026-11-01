@@ -2,7 +2,7 @@ import * as T from 'three';
 import artJson from '../../content/areas/scenography.json';
 import { worldData,actById } from '../content';
 import type { WorldState } from '../domain/types';
-import { mapObjects,walls,corridorSections,surfaceHeight,type MapObject } from '../world/layout';
+import { mapObjects,walls,corridorSlope,corridorDeckSections,surfaceHeight,type MapObject } from '../world/layout';
 import { objectPresent } from '../simulation/navigation';
 import { ModelFactory } from './models';
 import type { AssetResolver } from './assets';
@@ -16,6 +16,16 @@ export function deckGeometry(x:number,z:number,w:number,d:number):T.BufferGeomet
  for(const [dx,dz] of corners)vertices.push(x+dx,surfaceHeight(x+dx,z+dz)-.28,z+dz);
  const g=new T.BufferGeometry();g.setAttribute('position',new T.Float32BufferAttribute(vertices,3));g.setIndex([0,2,1,0,3,2,4,5,6,4,6,7,0,1,5,0,5,4,1,2,6,1,6,5,2,3,7,2,7,6,3,0,4,3,4,7]);for(let n=0;n<8;n++)uv.push(n%2,Math.floor(n/2)%2);g.setAttribute('uv',new T.Float32BufferAttribute(uv,2));g.computeVertexNormals();return g;
 }
+/** The visible textured floor is the only top face, never a second lid on a box. */
+export function floorBaseGeometry(w:number,d:number):T.BoxGeometry{
+ const g=new T.BoxGeometry(w,.35,d),index=g.index!,indices:number[]=[];
+ for(const group of g.groups)if(group.materialIndex!==2)for(let i=group.start;i<group.start+group.count;i++)indices.push(index.getX(i));
+ g.setIndex(indices);g.clearGroups();return g;
+}
+export function inlayGeometry(x:number,z:number,w:number,d:number):T.BufferGeometry{
+ const vertices:number[]=[];for(const [dx,dz] of [[-w/2,-d/2],[w/2,-d/2],[w/2,d/2],[-w/2,d/2]])vertices.push(x+dx,surfaceHeight(x+dx,z+dz)+.008,z+dz);
+ const g=new T.BufferGeometry();g.setAttribute('position',new T.Float32BufferAttribute(vertices,3));g.setIndex([0,2,1,0,3,2]);g.computeVertexNormals();return g;
+}
 type Batch={mesh:T.InstancedMesh;entries:{matrix:T.Matrix4;object:MapObject}[]};
 export class Scenography{
  readonly factory=new ModelFactory();readonly models=new Map<string,T.Group>();readonly wheelMount:T.Group;
@@ -23,23 +33,22 @@ export class Scenography{
  private batches:Batch[]=[];private dynamicObjects=new Set<string>();private lastDecay='';private lastProgram='';private boardCanvas:HTMLCanvasElement;private boardTexture:T.CanvasTexture;
  constructor(private scene:T.Scene,private assets:AssetResolver){
   for(const a of worldData.areas){
-   const body=this.factory.box(scene,a.w,.35,a.d,a.color,a.x,a.floorY-.175,a.z);body.userData.floorBody=true;
+   const body=new T.Mesh(floorBaseGeometry(a.w,a.d),this.factory.material(a.color));body.position.set(a.x,a.floorY-.175,a.z);body.userData.floorBody=true;scene.add(body);
    const mat=new T.MeshStandardMaterial({map:assets.environment(areaArt[a.id].visualId),roughness:1});this.floorMaterials.set(a.id,mat);this.painted.push({mat,id:areaArt[a.id].visualId});
-   const floor=new T.Mesh(new T.PlaneGeometry(a.w,a.d),mat);floor.rotation.x=-Math.PI/2;floor.position.set(a.x,a.floorY+.004,a.z);floor.userData.surfaceArea=a.id;scene.add(floor);
+   const floor=new T.Mesh(new T.PlaneGeometry(a.w,a.d),mat);floor.rotation.x=-Math.PI/2;floor.position.set(a.x,a.floorY,a.z);floor.userData.surfaceArea=a.id;scene.add(floor);
   }
   for(const wall of walls){
    const mat=new T.MeshStandardMaterial({map:assets.environment(areaArt[wall.area].wallVisualId),roughness:.9});this.painted.push({mat,id:areaArt[wall.area].wallVisualId});
    const geo=new T.BoxGeometry(wall.w,wall.h,wall.d),uv=geo.attributes.uv;for(let n=0;n<uv.count;n++)uv.setX(n,uv.getX(n)*Math.max(wall.w,wall.d)/4);
    const mesh=new T.Mesh(geo,mat);mesh.position.set(wall.x,wall.floorY+wall.h/2,wall.z);mesh.name=wall.id;scene.add(mesh);
-   this.factory.box(scene,wall.w,.06,wall.d,areaArt[wall.area].trimColor,wall.x,wall.floorY+wall.h+.015,wall.z,true);
+   this.factory.box(scene,wall.w+.04,.06,wall.d+.04,areaArt[wall.area].trimColor,wall.x,wall.floorY+wall.h+.015,wall.z,true);
   }
   for(const c of worldData.corridors){
-   const sections=corridorSections(c);
-   for(let n=0;n<sections.cuts.length-1;n++){const min=sections.cuts[n],max=sections.cuts[n+1];if(max-min<.001)continue;
-    const x=sections.axis==='x'?(min+max)/2:c.x,z=sections.axis==='z'?(min+max)/2:c.z,w=sections.axis==='x'?max-min:c.w,d=sections.axis==='z'?max-min:c.d;
+   const axis=corridorSlope(c).axis;
+   for(const {x,z,w,d} of corridorDeckSections(c)){
     const mesh=new T.Mesh(deckGeometry(x,z,w,d),this.factory.material('#766049'));mesh.userData.walkingDeck=true;scene.add(mesh);
-    // Plank seams are an inlay on the mathematical top, not a second tilted slab.
-    const length=max-min;for(let p=min+.2;p<max;p+=.38){const y=surfaceHeight(sections.axis==='x'?p:c.x,sections.axis==='z'?p:c.z)+.008;const plank=this.factory.box(scene,sections.axis==='x'?.025:c.w-.06,.012,sections.axis==='z'?.025:c.d-.06,'#4e3d34',sections.axis==='x'?p:c.x,y,sections.axis==='z'?p:c.z);plank.userData.inlay=length;}
+    const min=axis==='x'?x-w/2:z-d/2,max=axis==='x'?x+w/2:z+d/2;
+    for(let p=min+.2;p<max;p+=.38){const seam=new T.Mesh(inlayGeometry(axis==='x'?p:x,axis==='z'?p:z,axis==='x'?.025:w-.06,axis==='z'?.025:d-.06),this.factory.material('#4e3d34'));seam.userData.inlay=true;scene.add(seam);}
    }
   }
   const ring=this.factory.ring(scene,5.5,.026,'#d2af72',0,.03,0);ring.rotation.x=-Math.PI/2;

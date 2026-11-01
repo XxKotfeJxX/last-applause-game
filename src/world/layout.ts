@@ -31,3 +31,15 @@ for(const a of worldData.areas){
  }
 }
 export function corridorSections(c:CorridorDef){const s=corridorSlope(c),size=s.axis==='x'?c.w:c.d,min=c[s.axis]-size/2,max=c[s.axis]+size/2;return{...s,cuts:[...new Set([min,max,Math.max(min,Math.min(max,s.start)),Math.max(min,Math.min(max,s.end))])].sort((a,b)=>a-b)};}
+
+/** Rooms own their floors. Render only the exposed portions between their edges. */
+export function corridorDeckSections(c:CorridorDef):{x:number;z:number;w:number;d:number}[]{
+ const s=corridorSections(c),result:{x:number;z:number;w:number;d:number}[]=[];
+ for(let i=0;i<s.cuts.length-1;i++){
+  const min=s.cuts[i],max=s.cuts[i+1];if(max-min<.001)continue;
+  const x=s.axis==='x'?(min+max)/2:c.x,z=s.axis==='z'?(min+max)/2:c.z;
+  if(worldData.areas.some(a=>contains(a,x,z)))continue;
+  result.push({x,z,w:s.axis==='x'?max-min:c.w,d:s.axis==='z'?max-min:c.d});
+ }
+ return result;
+}

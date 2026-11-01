@@ -16,7 +16,7 @@ export class ModelFactory{
  private legs(p:T.Object3D,w:number,h:number,d:number){for(const x of [-w/2+.1,w/2-.1])for(const z of [-d/2+.1,d/2-.1])this.cylinder(p,.055,h,C.wood,x,h/2,z,.08);}
  private frame(p:T.Object3D,w:number,h:number,d:number,x=0,y=0,z=0){for(const s of [-1,1]){this.box(p,.07,h,d,C.gold,x+s*w/2,y,z,true);this.box(p,w+.07,.07,d,C.gold,x,y+s*h/2,z,true);}}
  private star(p:T.Object3D,r:number,color:string,x=0,y=0,z=0){const s=new T.Shape();for(let i=0;i<10;i++){const angle=Math.PI/2+i*Math.PI/5,rad=i%2?r*.43:r;const px=Math.cos(angle)*rad,py=Math.sin(angle)*rad;if(i)s.lineTo(px,py);else s.moveTo(px,py);}s.closePath();return this.mesh(p,this.geo('star'+r,()=>new T.ExtrudeGeometry(s,{depth:.025,bevelEnabled:false})),color,x,y,z,true);}
- private gear(p:T.Object3D,r:number,x:number,y:number,z:number){const g=new T.Group();g.position.set(x,y,z);p.add(g);this.ring(g,r,.055,C.gold);this.cylinder(g,.1,.12,C.iron).rotation.x=Math.PI/2;for(let i=0;i<12;i++){const a=i*Math.PI/6,b=this.box(g,.12,.18,.12,C.gold,Math.sin(a)*r,Math.cos(a)*r,0,true);b.rotation.z=-a;if(i%2===0){const spoke=this.box(g,.045,r*2,.05,C.iron);spoke.rotation.z=a;}}return g;}
+ private gear(p:T.Object3D,r:number,x:number,y:number,z:number){const g=new T.Group();g.position.set(x,y,z);p.add(g);this.ring(g,r,.055,C.gold);this.cylinder(g,.1,.12,C.iron).rotation.x=Math.PI/2;for(let i=0;i<12;i++){const a=i*Math.PI/6,b=this.box(g,.12,.18,.12,C.gold,Math.sin(a)*r,Math.cos(a)*r,0,true);b.rotation.z=-a;if(i%2===0&&i<6){const spoke=this.box(g,.045,r*2,.05,C.iron);spoke.rotation.z=a;}}return g;}
  private knife(p:T.Object3D,safe:boolean,x:number,y:number,z:number){
   const g=new T.Group();g.position.set(x,y,z);p.add(g);const blade=new T.Shape();blade.moveTo(-.055,.18);blade.lineTo(.055,.18);blade.lineTo(.04,.55);blade.lineTo(0,.7);blade.lineTo(-.04,.55);blade.closePath();
   this.mesh(g,this.geo('blade',()=>new T.ExtrudeGeometry(blade,{depth:.025,bevelEnabled:true,bevelThickness:.008,bevelSize:.007,bevelSegments:1,steps:1})),safe?'#c9decb':C.steel,0,0,0,true);
@@ -104,23 +104,23 @@ export class ModelFactory{
     this.legs(p,w,.48,d);for(let n=0;n<3;n++)this.box(p,w,.09,.19,C.panel,0,.52,-.25+n*.24);for(const x of [-w/2+.1,w/2-.1])this.box(p,.07,.6,.08,C.gold,x,.73,-d*.4);this.box(p,w,.36,.09,C.wood,0,.83,-d*.4);for(const x of [-w*.4,w*.4])this.box(p,.08,.08,d,C.gold,x,.75,0);break;
    }
    case 'crate':{
-    this.box(p,w-.04,h-.04,d-.04,'#795e41',0,h/2,0);for(const x of [-1,1])for(const z of [-1,1])this.box(p,.1,h,.1,'#bd9865',x*(w/2-.05),h/2,z*(d/2-.05));for(const y of [.1,h-.1]){this.box(p,w,.09,.05,C.wood,0,y,front);this.box(p,w,.09,.05,C.wood,0,y,-front);}const brace=this.box(p,w*.1,h*1.05,.05,C.wood,0,h/2,front+.01);brace.rotation.z=-Math.atan(w/h)*.8;break;
+    this.box(p,w-.04,h-.04,d-.04,'#795e41',0,h/2,0);for(const x of [-1,1])for(const z of [-1,1])this.box(p,.1,h,.1,'#bd9865',x*(w/2-.05),h/2,z*(d/2-.05));for(const y of [.1,h-.1]){this.box(p,w-.2,.09,.05,C.wood,0,y,front);this.box(p,w-.2,.09,.05,C.wood,0,y,-front);}const brace=this.box(p,w*.1,h*1.05,.05,C.wood,0,h/2,front+.01);brace.rotation.z=-Math.atan(w/h)*.8;break;
    }
    case 'trunk':{
-    this.box(p,w,h*.72,d,C.wood,0,h*.36,0);this.box(p,w,h*.28,d,C.panel,0,h*.86,0);for(const x of [-w*.35,w*.35])this.box(p,.08,h,d+.025,C.gold,x,h/2,0);this.box(p,.14,.18,.05,C.gold,0,h*.65,front+.03);for(const x of [-w/2,w/2])this.ring(p,.1,.02,C.gold,x,h*.5,0).rotation.y=Math.PI/2;break;
+    this.box(p,w,h*.72,d,C.wood,0,h*.36,0);this.box(p,w,h*.28,d,C.panel,0,h*.86,0);for(const x of [-w*.35,w*.35])this.box(p,.08,h+.035,d+.025,C.gold,x,h/2,0);this.box(p,.14,.18,.05,C.gold,0,h*.65,front+.03);for(const x of [-w/2,w/2])this.ring(p,.1,.02,C.gold,x,h*.5,0).rotation.y=Math.PI/2;break;
    }
    case 'shelf':{
-    for(const x of [-w/2+.05,w/2-.05])this.box(p,.09,h,d,C.iron,x,h/2,0);for(let i=0;i<4;i++){const y=.15+i*(h-.2)/3;this.box(p,w,.08,d,C.wood,0,y,0);if(i<3)for(let n=0;n<3;n++){this.box(p,.28,.3,.3,n%2?C.teal:C.panel,-w*.32+n*w*.32,y+.19,0);this.box(p,.3,.035,.32,C.gold,-w*.32+n*w*.32,y+.34,0);}}break;
+    for(const x of [-w/2+.05,w/2-.05])this.box(p,.09,h,d,C.iron,x,h/2,0);for(let i=0;i<4;i++){const y=.15+i*(h-.2)/3;this.box(p,w-.2,.08,d,C.wood,0,y,0);if(i<3)for(let n=0;n<3;n++){this.box(p,.28,.3,.3,n%2?C.teal:C.panel,-w*.32+n*w*.32,y+.19,0);this.box(p,.3,.035,.32,C.gold,-w*.32+n*w*.32,y+.34,0);}}break;
    }
    case 'vanity':{
     this.legs(p,w,.7,d);this.box(p,w,.12,d,C.wood,0,.75,0);this.box(p,w-.15,h-.9,.13,C.gold,0,(h+.7)/2,-d*.35);
     this.box(p,w-.32,h-1.07,.04,'#779995',0,(h+.7)/2,-d*.35+.09);for(let i=0;i<5;i++)this.sphere(p,.045,C.cream,-w*.36+i*w*.18,h-.12,-d*.35+.12);this.cylinder(p,.07,.12,C.teal,-w*.3,.88,0);break;
    }
    case 'curtain':{
-    this.box(p,w,h,d,C.wood,0,h/2,0);for(let i=0;i<12;i++){const fold=this.cylinder(p,.13,h,C.panel,w/2,h/2,-d/2+.2+i*(d-.4)/11);fold.scale.z=.65;}this.box(p,.1,.08,d+.1,C.gold,w/2,h-.04,0);break;
+    this.box(p,w,h,d,C.wood,0,h/2,0);for(let i=0;i<12;i++){const fold=this.cylinder(p,.13,h,C.panel,w/2,h/2,-d/2+.2+i*(d-.4)/11);fold.scale.z=.65;}this.box(p,.1,.08,d+.1,C.gold,w/2,h+.02,0);break;
    }
    case 'portrait':{
-    this.box(p,w,h,d,C.wood,0,h/2,0);this.frame(p,w,h,.04,0,h/2,front);const head=this.sphere(p,.14,C.gold,0,h*.63,front+.02);head.scale.z=.08;const body=this.sphere(p,.24,C.panel,0,h*.32,front+.02);body.scale.set(1,1.2,.1);break;
+    this.box(p,w,h,d,C.wood,0,h/2,0);this.frame(p,w,h+.08,.04,0,h/2,front);const head=this.sphere(p,.14,C.gold,0,h*.63,front+.02);head.scale.z=.08;const body=this.sphere(p,.24,C.panel,0,h*.32,front+.02);body.scale.set(1,1.2,.1);break;
    }
    case 'lamp':{
     this.cylinder(p,.15,.13,C.iron,0,.065,0);this.cylinder(p,.035,h-.55,C.gold,0,(h-.55)/2,0);this.box(p,.2,.32,.2,C.cream,0,h-.33,0);for(const x of [-.13,.13])for(const z of [-.13,.13])this.box(p,.025,.4,.025,C.iron,x,h-.33,z);this.cylinder(p,.21,.13,C.gold,0,h-.56,0,.15);this.cylinder(p,.04,.23,C.panel,0,h-.08,0,.22);break;
@@ -137,12 +137,12 @@ export class ModelFactory{
    case 'gear':{const gear=this.gear(p,h*.43,0,h/2,0);gear.rotation.y=Math.PI/2;gear.name='gear';break;}
    case 'portal':{
     const span=Math.max(w,d),horizontal=d>w;
-    for(const side of [-1,1]){const x=horizontal?0:side*(span/2-.08),z=horizontal?side*(span/2-.08):0;this.box(p,.14,h,.14,C.wood,x,h/2,z);this.box(p,.23,.12,.23,C.gold,x,.06,z);}
+    for(const side of [-1,1]){const x=horizontal?0:side*(span/2-.08),z=horizontal?side*(span/2-.08):0;this.box(p,.14,h-.14,.14,C.wood,x,(h-.14)/2,z);this.box(p,.23,.12,.23,C.gold,x,.06,z);}
     this.box(p,horizontal?.14:span,.14,horizontal?span:.14,C.gold,0,h-.07,0);break;
    }
    case 'arch':{
-    const y=h-.45;for(const x of [-w/2+.25,w/2-.25]){this.box(p,.45,h,d,C.wood,x,h/2,0);this.box(p,.58,.18,d+.1,C.gold,x,.12,0);this.box(p,.58,.17,d+.1,C.gold,x,h-.05,0);}
-    this.box(p,w,.45,d,C.panel,0,y+.2,0);this.box(p,w,.06,d+.03,C.gold,0,y-.05,0);for(let n=0;n<12;n++){const swag=this.sphere(p,.3,C.panel,-w*.44+n*w*.08,y-.15,.05);swag.scale.set(1.15,.65,.7);}this.star(p,.2,C.gold,0,h-.3,front+.04);break;
+    const y=h-.45;for(const x of [-w/2+.25,w/2-.25]){this.box(p,.45,h-.475,d,C.wood,x,(h-.475)/2,0);this.box(p,.58,.18,d+.1,C.gold,x,.12,0);this.box(p,.58,.17,d+.1,C.gold,x,h-.05,0);}
+    this.box(p,w,.45,d,C.panel,0,y+.2,0);this.box(p,w+.04,.06,d+.03,C.gold,0,y-.05,0);for(let n=0;n<12;n++){const swag=this.sphere(p,.3,C.panel,-w*.44+n*w*.08,y-.15,.05);swag.scale.set(1.15,.65,.7);}this.star(p,.2,C.gold,0,h-.3,front+.04);break;
    }
    default:throw new Error(`Unmodeled map object: ${o.kind}`);
   }
