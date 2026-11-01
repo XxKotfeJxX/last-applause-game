@@ -30,12 +30,12 @@ function renderOverlay(){
     buttons=verse('ui.005', {p0: hasSave('manual')?verse('ui.006'):''});
   } else if(overlay==='target'&&targetId){
     title=world.actors[targetId]?characterById[targetId].name:world.items[targetId]?itemById[world.items[targetId].defId].name:worldData.interactables.find(x=>x.id===targetId)?.name??verse('ui.007');
-    body=`<p class="dialogue">${escapeHtml(message||verse('ui.008')).replace(/\n/g,'<br>')}</p>`;
+    body=(world.items[targetId]?`<img class="item-preview" src="${scene.icons.icon(itemById[world.items[targetId].defId])}" alt="${escapeHtml(title)}">`:'')+`<p class="dialogue">${escapeHtml(message||verse('ui.008')).replace(/\n/g,'<br>')}</p>`;
     buttons=optionsHtml(getOptions(world,targetId))+verse('ui.009');
   } else if(overlay==='inventory'){
     title=verse('ui.010');const owned=Object.values(world.items).filter(i=>i.location.kind==='actor'&&i.location.actorId==='player');
     body=verse('ui.011', {p0: world.tokens});
-    buttons=owned.map(i=>`<button class="choice" data-item="${escapeHtml(i.instanceId)}">${escapeHtml(itemById[i.defId].name)} ${i.location.kind==='actor'&&i.location.slot==='carry'?verse('ui.012'):''}</button>`).join('')||verse('ui.013');
+    buttons=owned.map(i=>`<button class="choice" data-item="${escapeHtml(i.instanceId)}"><img class="item-icon" src="${scene.icons.icon(itemById[i.defId])}" alt="" aria-hidden="true"><span>${escapeHtml(itemById[i.defId].name)}</span> ${i.location.kind==='actor'&&i.location.slot==='carry'?verse('ui.012'):''}</button>`).join('')||verse('ui.013');
     buttons+=verse('ui.014');
   } else if(overlay==='journal'){
     title=verse('ui.015');body=verse('ui.016', {p0: world.slots.map(x=>`<li>${escapeHtml(actById[x.actId].name)} — ${x.status==='completed'?verse('ui.017'):verse('ui.018')}</li>`).join(''), p1: world.agreements.map(a=>`${escapeHtml(actById[a.candidateActId].name)}: ${a.status==='committed'?verse('ui.019'):a.status==='candidateAccepted'?verse('ui.020'):verse('ui.021')}`).join('<br>')||verse('ui.022'), p2: world.facts.map(f=>`<li>${escapeHtml(factText(f))}</li>`).join(''), p3: world.log.slice(0,8).map(escapeHtml).join('<br>')});buttons=verse('ui.023');

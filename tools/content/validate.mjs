@@ -30,9 +30,9 @@ for(const [role,required] of Object.entries({'role.stage_double':['capability.hu
 const knownFacts=new Set([...acts.map(a=>a.fact),'fact.vision','fact.cabinet_seen','fact.hidden_passage','fact.blackout','fact.knife_inspection','fact.safe_issued']);
 for(const d of lines){if(!actorIds.has(d.actorId))errors.push(`content/dialogues/dialogues.json ${d.id}.actorId: unknown ${d.actorId}`);if(d.requiresFact&&!knownFacts.has(d.requiresFact))errors.push(`content/dialogues/dialogues.json ${d.id}.requiresFact: unknown ${d.requiresFact}`);if(!d.text?.trim())errors.push(`content/dialogues/dialogues.json ${d.id}.text: empty`);}
 const graph=new Map(areas.nodes.map(n=>[n.id,new Set()]));for(const [a,b] of areas.edges){graph.get(a)?.add(b);graph.get(b)?.add(a);}const seen=new Set(['arena']),q=['arena'];while(q.length)for(const n of graph.get(q.shift())??[])if(!seen.has(n)){seen.add(n);q.push(n);}if(seen.size!==areas.nodes.length)errors.push('content/areas/world.json: navigation graph is disconnected');
-const visualIds=new Set(),environmentIds=new Set();for(const kind of ['characters','items','environment']){
+const visualIds=new Set(),environmentIds=new Set(),visualMetas=new Map();for(const kind of ['characters','items','environment']){
   let folders=[];try{folders=await readdir(join(root,'public','assets',kind),{withFileTypes:true});}catch{continue;}
-  for(const dir of folders){if(!dir.isDirectory())continue;const meta=await read(`public/assets/${kind}/${dir.name}/asset.meta.json`);visualIds.add(meta.id);if(kind==='environment')environmentIds.add(meta.id);}
+  for(const dir of folders){if(!dir.isDirectory())continue;const meta=await read(`public/assets/${kind}/${dir.name}/asset.meta.json`);visualIds.add(meta.id);visualMetas.set(meta.id,meta);if(kind==='environment')environmentIds.add(meta.id);}
 }
 for(const def of [...chars,...items])if(!visualIds.has(def.visualId))errors.push(`${def.id}.visualId: missing package ${def.visualId}`);
 if(!visualIds.has('visual.character.hero'))errors.push('visual.character.hero: missing package for player');
@@ -47,4 +47,8 @@ for(const [id,style] of Object.entries(scenery.areas??{})){
 }
 for(const [station,visual] of Object.entries(scenery.fixtures??{}))if(!stationIds.has(station)||!environmentIds.has(visual))errors.push(`Unknown fixture binding: ${station} / ${visual}`);
 for(const name of ['game','ui'])for(const [id,text] of Object.entries(await read(`content/locales/uk/${name}.json`)))if(!id.startsWith(name+'.')||typeof text!=='string'||!text.trim())errors.push(`Invalid verse ${id}`);
+const modelCatalog=await read('content/models/catalog.json'),objects=(await read('content/areas/objects.json')).objects;
+const objectIds=new Set();for(const o of objects){if(objectIds.has(o.id))errors.push(`Duplicate map object: ${o.id}`);objectIds.add(o.id);if(!modelCatalog.map.includes(o.kind)||!areaIds.has(o.area))errors.push(`Invalid map object kind/area: ${o.id}`);for(const n of ['x','z','w','h','d'])if(!Number.isFinite(o[n])||(['w','h','d'].includes(n)&&o[n]<=0))errors.push(`${o.id}: invalid ${n}`);}
+for(const station of areas.interactables){const o=objects.find(o=>o.id===station.id);if(!o||o.kind!==({rig:'winch',passage:'hatch'}[station.kind]??station.kind)||o.area!==station.area||o.x!==station.x||o.z!==station.z)errors.push(`${station.id}: model and logical station disagree`);}
+for(const item of items)if(item.modelId){if(!modelCatalog.items.includes(item.modelId))errors.push(`${item.id}: unknown modelId ${item.modelId}`);if(visualMetas.get(item.visualId)?.modelId!==item.modelId)errors.push(`${item.id}: definition/asset modelId mismatch`);}
 if(errors.length){for(const e of errors)console.error(e);process.exitCode=1;}else console.log(`Content valid: ${chars.length} NPC, ${items.length} items, ${acts.length} acts, ${areas.areas.length} areas, ${lines.length} dialogue lines.`);

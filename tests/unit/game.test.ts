@@ -72,7 +72,7 @@ describe('authoritative world',()=>{
     const route=findRoute(s,'understage','arena');
     expect(route).not.toContain('arenaEast');expect(route.at(-1)).toBe('arena');
     for(let i=0;i<50;i++)movePlayer(s,1,0,100);
-    expect(s.player.x).toBeLessThan(7.1);
+    expect(s.player.x).toBeLessThan(8.21);expect(s.player.x).toBeGreaterThan(8.0);
   });
   it('accepts a new role-bound double with existing capabilities',()=>{
     const original=pack.roles['role.stage_double'];

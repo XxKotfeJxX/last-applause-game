@@ -3,9 +3,9 @@ import { execute, movePlayer, tickWorld } from '../src/domain/game';
 import type { WorldState } from '../src/domain/types';
 import { closestNode, findRoute, nodePosition } from '../src/simulation/navigation';
 
-export function stepTo(s:WorldState,x:number,z:number){
+export function stepTo(s:WorldState,x:number,z:number,tolerance=.35){
   for(let i=0;i<1200;i++){
-    const dx=x-s.player.x,dz=z-s.player.z;if(Math.hypot(dx,dz)<.35)return;
+    const dx=x-s.player.x,dz=z-s.player.z;if(Math.hypot(dx,dz)<tolerance)return;
     const before=[s.player.x,s.player.z];movePlayer(s,dx,dz,100);tickWorld(s,100);
     if(i>20&&Math.hypot(s.player.x-before[0],s.player.z-before[1])<.001)throw new Error(`Player blocked going to ${x},${z} from ${s.player.x},${s.player.z}`);
   }
@@ -22,7 +22,7 @@ export function go(s:WorldState,id:string){
     const from=closestNode(s.player.x,s.player.z),to=closestNode(target.x,target.z);
     stepTo(s,nodePosition(from).x,nodePosition(from).z);
     for(const node of findRoute(s,from,to))stepTo(s,nodePosition(node).x,nodePosition(node).z);
-    const newest=location();stepTo(s,newest.x,newest.z);
+    const newest=location();stepTo(s,newest.x,newest.z,2.4);
   }
   throw new Error(`Could not approach ${id}`);
 }

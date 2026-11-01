@@ -1,47 +1,333 @@
 {
   "schemaVersion": 1,
   "areas": [
-    {"id":"zone.arena","name":"Манеж","x":0,"z":0,"w":14,"d":14,"floorY":0,"color":"#8d3034"},
-    {"id":"zone.foyer","name":"Фоє та глядацьке кільце","x":0,"z":13,"w":12,"d":8,"floorY":0,"color":"#655139"},
-    {"id":"zone.backstage","name":"Закулісний коридор","x":0,"z":-12.5,"w":16,"d":7,"floorY":0,"color":"#413c4c"},
-    {"id":"zone.dressing","name":"Гримерки","x":-15,"z":-12,"w":8,"d":8,"floorY":0,"color":"#524254"},
-    {"id":"zone.props","name":"Реквізиторська та майстерня","x":15,"z":-12,"w":8,"d":8,"floorY":0,"color":"#4a4e46"},
-    {"id":"zone.understage","name":"Технічне підпілля","x":15,"z":0,"w":8,"d":8,"floorY":0,"color":"#38434a"},
-    {"id":"zone.gallery","name":"Верхня галерея","x":-15,"z":0,"w":8,"d":8,"floorY":3.5,"color":"#4c463a"}
+    {
+      "id": "zone.arena",
+      "name": "Манеж",
+      "x": 0,
+      "z": 0,
+      "w": 14,
+      "d": 14,
+      "floorY": 0,
+      "color": "#8d3034"
+    },
+    {
+      "id": "zone.foyer",
+      "name": "Фоє та глядацьке кільце",
+      "x": 0,
+      "z": 13,
+      "w": 12,
+      "d": 8,
+      "floorY": 0,
+      "color": "#655139"
+    },
+    {
+      "id": "zone.backstage",
+      "name": "Закулісний коридор",
+      "x": 0,
+      "z": -12.5,
+      "w": 16,
+      "d": 7,
+      "floorY": 0,
+      "color": "#413c4c"
+    },
+    {
+      "id": "zone.dressing",
+      "name": "Гримерки",
+      "x": -15,
+      "z": -12,
+      "w": 8,
+      "d": 8,
+      "floorY": 0,
+      "color": "#524254"
+    },
+    {
+      "id": "zone.props",
+      "name": "Реквізиторська та майстерня",
+      "x": 15,
+      "z": -12,
+      "w": 8,
+      "d": 8,
+      "floorY": 0,
+      "color": "#4a4e46"
+    },
+    {
+      "id": "zone.understage",
+      "name": "Технічне підпілля",
+      "x": 15,
+      "z": 0,
+      "w": 8,
+      "d": 8,
+      "floorY": 0,
+      "color": "#38434a"
+    },
+    {
+      "id": "zone.gallery",
+      "name": "Верхня галерея",
+      "x": -15,
+      "z": 0,
+      "w": 8,
+      "d": 8,
+      "floorY": 3.5,
+      "color": "#4c463a"
+    }
   ],
   "corridors": [
-    {"a":"zone.arena","b":"zone.foyer","x":0,"z":8,"w":4,"d":4},
-    {"a":"zone.arena","b":"zone.backstage","x":0,"z":-8,"w":4,"d":4},
-    {"a":"zone.backstage","b":"zone.dressing","x":-9.5,"z":-12,"w":4,"d":3},
-    {"a":"zone.backstage","b":"zone.props","x":9.5,"z":-12,"w":4,"d":3},
-    {"a":"zone.props","b":"zone.understage","x":15,"z":-6,"w":3,"d":5},
-    {"a":"zone.dressing","b":"zone.gallery","x":-15,"z":-6,"w":3,"d":5},
-    {"a":"zone.understage","b":"zone.arena","x":9,"z":0,"w":5,"d":3},
-    {"a":"zone.gallery","b":"zone.arena","x":-9,"z":0,"w":5,"d":3}
+    {
+      "a": "zone.arena",
+      "b": "zone.foyer",
+      "x": 0,
+      "z": 8,
+      "w": 4,
+      "d": 4
+    },
+    {
+      "a": "zone.arena",
+      "b": "zone.backstage",
+      "x": 0,
+      "z": -8,
+      "w": 4,
+      "d": 4
+    },
+    {
+      "a": "zone.backstage",
+      "b": "zone.dressing",
+      "x": -9.5,
+      "z": -12,
+      "w": 4,
+      "d": 3
+    },
+    {
+      "a": "zone.backstage",
+      "b": "zone.props",
+      "x": 9.5,
+      "z": -12,
+      "w": 4,
+      "d": 3
+    },
+    {
+      "a": "zone.props",
+      "b": "zone.understage",
+      "x": 15,
+      "z": -6,
+      "w": 3,
+      "d": 5
+    },
+    {
+      "a": "zone.dressing",
+      "b": "zone.gallery",
+      "x": -15,
+      "z": -6,
+      "w": 3,
+      "d": 5
+    },
+    {
+      "a": "zone.understage",
+      "b": "zone.arena",
+      "x": 9,
+      "z": 0,
+      "w": 5,
+      "d": 3
+    },
+    {
+      "a": "zone.gallery",
+      "b": "zone.arena",
+      "x": -9,
+      "z": 0,
+      "w": 5,
+      "d": 3
+    }
   ],
   "nodes": [
-    {"id":"arena","x":0,"z":0,"area":"zone.arena"},
-    {"id":"foyer","x":0,"z":13,"area":"zone.foyer"},
-    {"id":"backstage","x":0,"z":-12,"area":"zone.backstage"},
-    {"id":"dressing","x":-15,"z":-12,"area":"zone.dressing"},
-    {"id":"props","x":15,"z":-12,"area":"zone.props"},
-    {"id":"understage","x":15,"z":0,"area":"zone.understage"},
-    {"id":"gallery","x":-15,"z":0,"area":"zone.gallery"},
-    {"id":"arenaNorth","x":0,"z":6,"area":"zone.arena"},
-    {"id":"arenaSouth","x":0,"z":-6,"area":"zone.arena"},
-    {"id":"arenaEast","x":6,"z":0,"area":"zone.arena"},
-    {"id":"arenaWest","x":-6,"z":0,"area":"zone.arena"}
+    {
+      "id": "arena",
+      "x": 0,
+      "z": 0,
+      "area": "zone.arena"
+    },
+    {
+      "id": "foyer",
+      "x": 0,
+      "z": 13,
+      "area": "zone.foyer"
+    },
+    {
+      "id": "backstage",
+      "x": 0,
+      "z": -12,
+      "area": "zone.backstage"
+    },
+    {
+      "id": "dressing",
+      "x": -15,
+      "z": -12,
+      "area": "zone.dressing"
+    },
+    {
+      "id": "props",
+      "x": 15,
+      "z": -12,
+      "area": "zone.props"
+    },
+    {
+      "id": "understage",
+      "x": 15,
+      "z": 0,
+      "area": "zone.understage"
+    },
+    {
+      "id": "gallery",
+      "x": -15,
+      "z": 0,
+      "area": "zone.gallery"
+    },
+    {
+      "id": "arenaNorth",
+      "x": 0,
+      "z": 6,
+      "area": "zone.arena"
+    },
+    {
+      "id": "arenaSouth",
+      "x": 0,
+      "z": -6,
+      "area": "zone.arena"
+    },
+    {
+      "id": "arenaEast",
+      "x": 6,
+      "z": 0,
+      "area": "zone.arena"
+    },
+    {
+      "id": "arenaWest",
+      "x": -6,
+      "z": 0,
+      "area": "zone.arena"
+    }
   ],
-  "edges": [["arena","arenaNorth"],["arenaNorth","foyer"],["arena","arenaSouth"],["arenaSouth","backstage"],["backstage","dressing"],["backstage","props"],["props","understage"],["understage","arenaEast"],["arenaEast","arena"],["dressing","gallery"],["gallery","arenaWest"],["arenaWest","arena"]],
+  "edges": [
+    [
+      "arena",
+      "arenaNorth"
+    ],
+    [
+      "arenaNorth",
+      "foyer"
+    ],
+    [
+      "arena",
+      "arenaSouth"
+    ],
+    [
+      "arenaSouth",
+      "backstage"
+    ],
+    [
+      "backstage",
+      "dressing"
+    ],
+    [
+      "backstage",
+      "props"
+    ],
+    [
+      "props",
+      "understage"
+    ],
+    [
+      "understage",
+      "arenaEast"
+    ],
+    [
+      "arenaEast",
+      "arena"
+    ],
+    [
+      "dressing",
+      "gallery"
+    ],
+    [
+      "gallery",
+      "arenaWest"
+    ],
+    [
+      "arenaWest",
+      "arena"
+    ]
+  ],
   "interactables": [
-    {"id":"station.program","name":"Афіша програми","x":-2,"z":-12,"area":"zone.backstage","kind":"program"},
-    {"id":"station.cabinet","name":"Шафа підміни","x":-16,"z":-11,"area":"zone.dressing","kind":"cabinet"},
-    {"id":"station.workbench","name":"Верстак і журнал видачі","x":14,"z":-11,"area":"zone.props","kind":"workbench"},
-    {"id":"station.wheel","name":"Колесо метальника","x":2,"z":-1,"area":"zone.arena","kind":"wheel"},
-    {"id":"station.rig","name":"Лебідка та прожектори","x":-15,"z":1,"area":"zone.gallery","kind":"rig"},
-    {"id":"station.passage","name":"Прихований прохід","x":15,"z":1,"area":"zone.understage","kind":"passage"},
-    {"id":"station.stage","name":"Сценічна мітка","x":-1,"z":2,"area":"zone.arena","kind":"stage"},
-    {"id":"station.gate","name":"Службова брама","x":8.5,"z":0,"area":"zone.understage","kind":"gate"},
-    {"id":"station.poster","name":"Афіша з видінням","x":0,"z":14,"area":"zone.foyer","kind":"poster"}
+    {
+      "id": "station.program",
+      "name": "Афіша програми",
+      "x": -2,
+      "z": -15.4,
+      "area": "zone.backstage",
+      "kind": "program"
+    },
+    {
+      "id": "station.cabinet",
+      "name": "Шафа підміни",
+      "x": -16.35,
+      "z": -11,
+      "area": "zone.dressing",
+      "kind": "cabinet"
+    },
+    {
+      "id": "station.workbench",
+      "name": "Верстак і журнал видачі",
+      "x": 13.5,
+      "z": -11,
+      "area": "zone.props",
+      "kind": "workbench"
+    },
+    {
+      "id": "station.wheel",
+      "name": "Колесо метальника",
+      "x": 2,
+      "z": -1,
+      "area": "zone.arena",
+      "kind": "wheel"
+    },
+    {
+      "id": "station.rig",
+      "name": "Лебідка та прожектори",
+      "x": -15,
+      "z": 1.15,
+      "area": "zone.gallery",
+      "kind": "rig"
+    },
+    {
+      "id": "station.passage",
+      "name": "Прихований прохід",
+      "x": 15,
+      "z": 1,
+      "area": "zone.understage",
+      "kind": "passage"
+    },
+    {
+      "id": "station.stage",
+      "name": "Сценічна мітка",
+      "x": -1,
+      "z": 2,
+      "area": "zone.arena",
+      "kind": "stage"
+    },
+    {
+      "id": "station.gate",
+      "name": "Службова брама",
+      "x": 8.5,
+      "z": 0,
+      "area": "zone.understage",
+      "kind": "gate"
+    },
+    {
+      "id": "station.poster",
+      "name": "Афіша з видінням",
+      "x": 0,
+      "z": 14,
+      "area": "zone.foyer",
+      "kind": "poster"
+    }
   ]
 }

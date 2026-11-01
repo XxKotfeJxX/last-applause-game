@@ -3,3 +3,5 @@
 .choice span,.choice small,#toast,#decay{white-space:pre-line}.dialogue{line-height:1.65}.choice{line-height:1.4}.choice small{min-width:100px}.modal{max-height:90vh}
 
 .modal-body li,.modal-body p{white-space:pre-line}
+
+.item-icon{width:72px;height:72px;object-fit:contain;flex:none;background:radial-gradient(#b18b5744,transparent 70%)}.choice[data-item]{justify-content:flex-start;min-height:86px}.item-preview{display:block;width:160px;height:160px;object-fit:contain;margin:0 auto}.choice[data-item] span{flex:1}

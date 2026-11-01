@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "id": "visual.item.live-knives",
   "kind": "item",
-  "renderMode": "uprightBillboard",
+  "renderMode": "proceduralModel",
   "worldSize": [
     0.8,
     0.8
@@ -15,9 +15,7 @@
       118
     ]
   },
-  "files": {
-    "world": "world.png",
-    "icon": "icon.png"
-  },
-  "fallback": "procedural.item"
+  "files": {},
+  "fallback": "procedural.item",
+  "modelId": "live-knives"
 }

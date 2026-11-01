@@ -1,7 +1,7 @@
 import { rulesFor } from './rules';
 import { verse } from '../content/verse';
 import { acts, actById, characterById, characters, dialogues, initialOrder, itemById, items, pack, stationById, worldData } from '../content';
-import { areaAt, closestNode, findRoute, nodePosition, walkable } from '../simulation/navigation';
+import { areaAt, closestNode, findRoute, nodePosition, moveOnFloor, walkable } from '../simulation/navigation';
 import type { ActorState, Agreement, ItemLocation, ItemState, Option, Result, WorldState } from './types';
 
 const ok=(message:string, extra:Partial<Result>={}):Result=>({ok:true,message,...extra});
@@ -115,8 +115,8 @@ export function tickWorld(s:WorldState,dtMs:number):void {
       if(a.route.length===0){a.route=findRoute(s,closestNode(a.x,a.z),a.goalNode);a.routeIndex=0;if(a.route.length===0){if(closestNode(a.x,a.z)===a.goalNode)arrive(s,a);else{a.reaction=verse('game.026');a.waitUntil=s.gameTimeMs+1000;}continue;}}
       const target=nodePosition(a.route[a.routeIndex]);if(!target){a.route=[];continue;}
       const dx=target.x-a.x,dz=target.z-a.z,d=Math.hypot(dx,dz),step=rulesFor(s).actorSpeed/10;
-      if(d<=step){a.x=target.x;a.z=target.z;a.nodeId=target.id;a.routeIndex++;if(a.routeIndex>=a.route.length)arrive(s,a);}
-      else {a.x+=dx/d*step;a.z+=dz/d*step;a.direction=Math.abs(dx)>Math.abs(dz)?(dx>0?'east':'west'):(dz>0?'south':'north');if(a.animationState!=='walk'){a.animationState='walk';a.animationStartedAt=s.gameTimeMs;}}
+      if(d<=step&&walkable(target.x,target.z,s)){a.x=target.x;a.z=target.z;a.nodeId=target.id;a.routeIndex++;if(a.routeIndex>=a.route.length)arrive(s,a);}
+      else {moveOnFloor(a,dx/d*Math.min(step,d),dz/d*Math.min(step,d),s);a.direction=Math.abs(dx)>Math.abs(dz)?(dx>0?'east':'west'):(dz>0?'south':'north');if(a.animationState!=='walk'){a.animationState='walk';a.animationStartedAt=s.gameTimeMs;}}
     }
     if(s.mode==='finale'&&s.gameTimeMs>=s.finaleDeadline){s.mode='dead';s.deathReason=verse('game.027');note(s,s.deathReason);}
   }
@@ -127,8 +127,7 @@ export function movePlayer(s:WorldState,dx:number,dz:number,dtMs:number):void {
   const m=Math.hypot(dx,dz);if(m<0.01){if(s.player.animationState!=='idle'){s.player.animationState='idle';s.player.animationStartedAt=s.gameTimeMs;}return;}
   const carrying=Object.values(s.items).find(i=>i.location.kind==='actor'&&i.location.actorId==='player'&&i.location.slot==='carry');
   const speed=carrying?2.1:3.1,step=speed*Math.min(dtMs,100)/1000,ux=dx/m,uz=dz/m;
-  if(walkable(s.player.x+ux*step,s.player.z,s))s.player.x+=ux*step;
-  if(walkable(s.player.x,s.player.z+uz*step,s))s.player.z+=uz*step;
+  moveOnFloor(s.player,ux*step,uz*step,s);
   s.player.direction=Math.abs(dx)>Math.abs(dz)?(dx>0?'east':'west'):(dz>0?'south':'north');
   if(s.player.animationState!==(carrying?'carry_walk':'walk')){s.player.animationState=carrying?'carry_walk':'walk';s.player.animationStartedAt=s.gameTimeMs;}
 }
@@ -195,7 +194,7 @@ export function getOptions(s:WorldState,targetId:string):Option[]{
     case 'passage':if(has(s,'fact.hidden_passage'))out.push(option('openPassage',verse('game.072'),!s.mechanisms.passageOpen));break;
     case 'program':out.push(option('program',verse('game.073')));break;
     case 'gate':{
-      const occupied=[s.player,...Object.values(s.actors)].some(a=>a.x>7&&a.x<11&&Math.abs(a.z)<1.5);
+      const occupied=[s.player,...Object.values(s.actors)].some(a=>Math.abs(a.x-station.x)<.4&&Math.abs(a.z-station.z)<1.7);
       out.push(option(s.mechanisms.serviceGateOpen?'closeGate':'openGate',s.mechanisms.serviceGateOpen?verse('game.074'):verse('game.075'),!occupied,verse('game.076')));
       break;
     }
@@ -273,7 +272,7 @@ export function execute(s:WorldState,targetId:string,actionId:string):Result{
     if(res.ok)note(s,verse('game.131', {p0: def.name}));return res.ok?ok(verse('game.132', {p0: def.name}),{sound:'ui'}):res;
   }
   if(actionId==='drop'&&item&&item.location.kind==='actor'&&item.location.actorId==='player'){
-    const areaId=areaAt(s.player.x,s.player.z)??'zone.arena';return transferItem(s,item.instanceId,'actor',{kind:'world',areaId,x:s.player.x+0.5,z:s.player.z});
+    const areaId=areaAt(s.player.x,s.player.z)??'zone.arena';return transferItem(s,item.instanceId,'actor',{kind:'world',areaId,x:s.player.x,z:s.player.z});
   }
   if(actionId==='equipMask'&&item&&playerHas(s,'role.hero_mask')){s.mechanisms.heroMaskEquipped=true;return ok(verse('game.133'));}
   if(actionId==='issueSafe'){if(s.tokens<rulesFor(s).safeKitPrice)return fail(verse('game.134'));s.tokens-=rulesFor(s).safeKitPrice;learn(s,'fact.safe_issued',verse('game.135'));return ok(verse('game.136'));}

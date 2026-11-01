@@ -2,6 +2,7 @@ import { acts, characterById, characters, initialOrder, itemById, items, nodeByI
 import { rulesFor } from '../domain/rules';
 import { createWorld } from '../domain/game';
 import type { WorldState } from '../domain/types';
+import { repairWorldPositions } from '../simulation/navigation';
 import { migrateSave } from './migrations';
 const prefix='last-applause:v1:';
 const error=()=>new Error('Запис не впізнався у світлі рампи.\nНову виставу почніть — старий лишився в пам’яті.');
@@ -49,6 +50,6 @@ export function saveWorld(slot:'manual'|'checkpoint',world:WorldState):void{
 }
 export function loadWorld(slot:'manual'|'checkpoint'):WorldState|null{
   const raw=localStorage.getItem(prefix+slot);if(!raw)return null;
-  try{const value=JSON.parse(raw);if(value.contentPackId!==pack.id)throw error();return validateWorld(migrateSave(value,pack.version));}catch{throw error();}
+  try{const value=JSON.parse(raw);if(value.contentPackId!==pack.id)throw error();const restored=validateWorld(migrateSave(value,pack.version));repairWorldPositions(restored);return restored;}catch{throw error();}
 }
 export function hasSave(slot:'manual'|'checkpoint'){return !!localStorage.getItem(prefix+slot);}

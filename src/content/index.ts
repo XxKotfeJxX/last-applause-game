@@ -10,7 +10,7 @@ export interface CorridorDef { a: string; b: string; x: number; z: number; w: nu
 export interface NodeDef { id: string; x: number; z: number; area: string }
 export interface StationDef { id: string; name: string; x: number; z: number; area: string; kind: string }
 export interface CharacterDef { id: string; name: string; visualId: string; color: string; accent: string; start: string; patrol: string[]; roleIds: string[]; actIds: string[]; speechProfileId:string }
-export interface ItemDef { id: string; name: string; visualId: string; capabilities: string[]; carryClass: 'small' | 'large'; decayPolicy: 'persistent' | 'local'; roleId: string; startArea: string; x: number; z: number }
+export interface ItemDef { id: string; name: string; visualId: string; modelId?:string; capabilities: string[]; carryClass: 'small' | 'large'; decayPolicy: 'persistent' | 'local'; roleId: string; startArea: string; x: number; z: number }
 export interface ActDef { id: string; name: string; actorId: string; prepStation: string; prepKey: string; cueLabels: string[]; fact: string }
 export const worldData = worldJson as { schemaVersion: number; areas: AreaDef[]; corridors: CorridorDef[]; nodes: NodeDef[]; edges: string[][]; interactables: StationDef[] };
 export const characters = charactersJson.characters as CharacterDef[];

@@ -1,6 +1,6 @@
 {
   "name": "last-applause",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "Локальна містична гра про останню виставу цирку",
   "private": true,
   "type": "module",

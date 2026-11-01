@@ -157,7 +157,7 @@ export const assetCatalog = {
         ],
         "head": [
           64,
-          38
+          54
         ]
       },
       "fallback": "procedural.character",
@@ -596,7 +596,7 @@ export const assetCatalog = {
       "schemaVersion": 1,
       "id": "visual.item.costume",
       "kind": "item",
-      "renderMode": "uprightBillboard",
+      "renderMode": "proceduralModel",
       "worldSize": [
         0.8,
         0.8
@@ -609,11 +609,9 @@ export const assetCatalog = {
           118
         ]
       },
-      "files": {
-        "world": "world.png",
-        "icon": "icon.png"
-      },
-      "fallback": "procedural.item"
+      "files": {},
+      "fallback": "procedural.item",
+      "modelId": "costume"
     }
   },
   "visual.item.hero-mask": {
@@ -624,7 +622,7 @@ export const assetCatalog = {
       "schemaVersion": 1,
       "id": "visual.item.hero-mask",
       "kind": "item",
-      "renderMode": "uprightBillboard",
+      "renderMode": "proceduralModel",
       "worldSize": [
         0.8,
         0.8
@@ -637,11 +635,9 @@ export const assetCatalog = {
           118
         ]
       },
-      "files": {
-        "world": "world.png",
-        "icon": "icon.png"
-      },
-      "fallback": "procedural.item"
+      "files": {},
+      "fallback": "procedural.item",
+      "modelId": "mask"
     }
   },
   "visual.item.live-knives": {
@@ -652,7 +648,7 @@ export const assetCatalog = {
       "schemaVersion": 1,
       "id": "visual.item.live-knives",
       "kind": "item",
-      "renderMode": "uprightBillboard",
+      "renderMode": "proceduralModel",
       "worldSize": [
         0.8,
         0.8
@@ -665,11 +661,9 @@ export const assetCatalog = {
           118
         ]
       },
-      "files": {
-        "world": "world.png",
-        "icon": "icon.png"
-      },
-      "fallback": "procedural.item"
+      "files": {},
+      "fallback": "procedural.item",
+      "modelId": "live-knives"
     }
   },
   "visual.item.safe-knives": {
@@ -680,7 +674,7 @@ export const assetCatalog = {
       "schemaVersion": 1,
       "id": "visual.item.safe-knives",
       "kind": "item",
-      "renderMode": "uprightBillboard",
+      "renderMode": "proceduralModel",
       "worldSize": [
         0.8,
         0.8
@@ -693,11 +687,9 @@ export const assetCatalog = {
           118
         ]
       },
-      "files": {
-        "world": "world.png",
-        "icon": "icon.png"
-      },
-      "fallback": "procedural.item"
+      "files": {},
+      "fallback": "procedural.item",
+      "modelId": "safe-knives"
     }
   },
   "visual.item.stage-blood": {
@@ -708,7 +700,7 @@ export const assetCatalog = {
       "schemaVersion": 1,
       "id": "visual.item.stage-blood",
       "kind": "item",
-      "renderMode": "uprightBillboard",
+      "renderMode": "proceduralModel",
       "worldSize": [
         0.8,
         0.8
@@ -721,11 +713,9 @@ export const assetCatalog = {
           118
         ]
       },
-      "files": {
-        "world": "world.png",
-        "icon": "icon.png"
-      },
-      "fallback": "procedural.item"
+      "files": {},
+      "fallback": "procedural.item",
+      "modelId": "blood"
     }
   },
   "visual.item.stage-double": {
@@ -736,7 +726,7 @@ export const assetCatalog = {
       "schemaVersion": 1,
       "id": "visual.item.stage-double",
       "kind": "item",
-      "renderMode": "uprightBillboard",
+      "renderMode": "proceduralModel",
       "worldSize": [
         1.4,
         2.1
@@ -749,11 +739,9 @@ export const assetCatalog = {
           118
         ]
       },
-      "files": {
-        "world": "world.png",
-        "icon": "icon.png"
-      },
-      "fallback": "procedural.item"
+      "files": {},
+      "fallback": "procedural.item",
+      "modelId": "mannequin"
     }
   },
   "visual.item.wrench": {
@@ -764,7 +752,7 @@ export const assetCatalog = {
       "schemaVersion": 1,
       "id": "visual.item.wrench",
       "kind": "item",
-      "renderMode": "uprightBillboard",
+      "renderMode": "proceduralModel",
       "worldSize": [
         0.8,
         0.8
@@ -777,11 +765,9 @@ export const assetCatalog = {
           118
         ]
       },
-      "files": {
-        "world": "world.png",
-        "icon": "icon.png"
-      },
-      "fallback": "procedural.item"
+      "files": {},
+      "fallback": "procedural.item",
+      "modelId": "wrench"
     }
   },
   "visual.environment.arena": {
