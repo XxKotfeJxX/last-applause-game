@@ -49,7 +49,7 @@ export class GameScene{
   this.visualTime+=dt;
   const width=this.renderer.domElement.clientWidth,height=this.renderer.domElement.clientHeight,halfH=10.5,aspect=width/Math.max(1,height);this.camera.left=-halfH*aspect;this.camera.right=halfH*aspect;this.camera.top=halfH;this.camera.bottom=-halfH;this.camera.updateProjectionMatrix();
   const feet=new THREE.Vector3(s.player.x,floorY(s.player.x,s.player.z),s.player.z);this.cameraRig.update(this.camera,feet.clone().add(new THREE.Vector3(0,.8,0)),dt);this.frustum.setFromProjectionMatrix(this.viewProjection.multiplyMatrices(this.camera.projectionMatrix,this.camera.matrixWorldInverse));
-  if(this.debugGroup.visible)this.buildDebug(s);this.scenery.update(s);this.scenery.cutaway(s,this.camera.position,feet);
+  if(this.debugGroup.visible)this.buildDebug(s);this.scenery.update(s);this.scenery.cutaway(s,this.camera,feet,dt);
   const carrying=(id:string)=>Object.values(s.items).some(i=>i.location.kind==='actor'&&i.location.actorId===id&&(id!=='player'||i.location.slot==='carry'));
   this.setAvatar('player',s.player.x,s.player.z,s.player.animationState,s.player.direction,s.player.animationStartedAt,s.gameTimeMs,carrying('player'));
   for(const a of Object.values(s.actors))this.setAvatar(a.id,a.x,a.z,a.id===speakingId?'talk':a.animationState,a.direction,a.id===speakingId?0:a.animationStartedAt,a.id===speakingId?this.visualTime:s.gameTimeMs,carrying(a.id));
@@ -60,7 +60,7 @@ export class GameScene{
     const a=l.actorId==='player'?s.player:s.actors[l.actorId],isMask=def.modelId==='mask'&&l.actorId==='player'&&s.mechanisms.heroMaskEquipped;
     if(!a||(!isMask&&l.actorId==='player'&&l.slot!=='carry'))show=false;
     else{const socket=this.avatars.get(l.actorId)!.rig.sockets[isMask?'head':'handRight'],pos=socket.getWorldPosition(new THREE.Vector3());x=pos.x;y=pos.y;z=pos.z;mesh.quaternion.copy(socket.getWorldQuaternion(new THREE.Quaternion()));
-     const height=Number(mesh.userData.height);if(isMask)mesh.scale.multiplyScalar(.6);else{const offset=new THREE.Vector3(0,-height*.45,0).applyQuaternion(mesh.quaternion);x+=offset.x;y+=offset.y;z+=offset.z;}
+     const height=Number(mesh.userData.height);if(isMask)mesh.scale.multiplyScalar(.48);else{const offset=new THREE.Vector3(0,-height*.45,0).applyQuaternion(mesh.quaternion);x+=offset.x;y+=offset.y;z+=offset.z;}
     }
    }else if(l.kind==='installed'){
     const mounted=['double','costume','mask'].includes(l.slot);if(mounted){const local=new THREE.Vector3(l.slot==='costume'?.015:0,(l.slot==='double'?.28:l.slot==='costume'?.72:2.0)-1.45,l.slot==='double'?.28:l.slot==='costume'?.54:.57);const pos=this.scenery.wheelMount.localToWorld(local);x=pos.x;y=pos.y;z=pos.z;mesh.rotation.z=this.scenery.wheelMount.rotation.z;if(l.slot==='costume')mesh.scale.multiplyScalar(1.6);if(l.slot==='mask')mesh.scale.multiplyScalar(.6);}else{x=3.6;y=.02;z=-1;}

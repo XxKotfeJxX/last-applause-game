@@ -15,13 +15,3 @@ export class CameraRig{
  }
  movement(dx:number,dz:number){const c=Math.cos(this.bearing),s=Math.sin(this.bearing);return{x:dx*c+dz*s,z:-dx*s+dz*c};}
 }
-/** Only blockers between the eye and hero/path are cut away; geometry behind stays opaque. */
-export function blocksView(box:T.Box3,eye:T.Vector3,focus:T.Vector3){
- const hit=new T.Vector3(),right=new T.Vector3(eye.z-focus.z,0,focus.x-eye.x).normalize();
- for(const y of [.2,1.15,1.8])for(const side of [-.65,0,.65]){
-  const end=focus.clone().addScaledVector(right,side).add(new T.Vector3(0,y,0)),direction=end.clone().sub(eye),length=direction.length();
-  const ray=new T.Ray(eye,direction.normalize());
-  if(ray.intersectBox(box,hit)&&eye.distanceTo(hit)<length-.12)return true;
- }
- return false;
-}

@@ -78,5 +78,6 @@
   },
   "modelId": "hero",
   "geometrySource": "src/render/characters.ts",
-  "legacySpriteMode": "uprightBillboard"
+  "legacySpriteMode": "uprightBillboard",
+  "style": "animeToon"
 }

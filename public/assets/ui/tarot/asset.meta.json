@@ -1,0 +1,16 @@
+{
+  "schemaVersion": 1,
+  "id": "visual.ui.tarot",
+  "kind": "ui",
+  "renderMode": "domTarot",
+  "frame": {"width": 640, "height": 960},
+  "files": {
+    "mask": "mask.webp",
+    "wheel": "wheel.webp",
+    "blades": "blades.webp",
+    "crimson": "crimson.webp",
+    "figure": "figure.webp",
+    "curtain": "curtain.webp"
+  },
+  "origin": "original imagegen illustrations; titles rendered as native DOM text"
+}

@@ -3,13 +3,13 @@ import * as T from 'three';
 import {characters} from '../../src/content';
 import {CharacterRig,characterClips} from '../../src/render/characters';
 import {ModelFactory} from '../../src/render/models';
-import {CameraRig,blocksView,shortestAngle,DEFAULT_BEARING} from '../../src/render/camera';
+import {CameraRig,shortestAngle,DEFAULT_BEARING} from '../../src/render/camera';
 describe('articulated original characters',()=>{
  const factory=new ModelFactory(),people=[{visualId:'visual.character.hero',name:'Герой',color:'#e6dac0',accent:'#802c3d'},...characters];
  it('gives all seven characters unique geometry, grounded soles and real attachment points',()=>{
   const signatures=new Set<string>();
   for(const def of people){const rig=new CharacterRig(factory,def),box=new T.Box3().setFromObject(rig.root),meshes:T.Mesh[]=[];rig.root.traverse(m=>{if(m instanceof T.Mesh)meshes.push(m);});
-   expect(box.min.y,def.name).toBeCloseTo(0,5);expect(box.max.y).toBeGreaterThan(1.8);expect(box.max.y).toBeLessThan(2.6);expect(meshes.length).toBeGreaterThan(35);
+   expect(box.min.y,def.name).toBeCloseTo(0,5);expect(box.max.y).toBeGreaterThan(1.8);expect(box.max.y).toBeLessThan(2.6);expect(meshes.length).toBeGreaterThan(20);expect(meshes.length).toBeLessThan(55);expect(rig.root.userData.style).toBe('anime-toon');let eyes=0;rig.root.traverse(o=>{if(o.name==='anime-eye')eyes++;});expect(eyes).toBe(2);
    signatures.add(meshes.map(m=>`${m.geometry.uuid}:${(m.material as T.Material).uuid}:${m.position.toArray()}`).join('|'));
    for(const socket of Object.values(rig.sockets)){expect(socket.parent).not.toBeNull();expect(socket.getWorldPosition(new T.Vector3()).y).toBeGreaterThan(.6);}
   }expect(signatures.size).toBe(7);
@@ -29,12 +29,5 @@ describe('camera and sight lines',()=>{
  it('rotates along the shortest arc, and WASD remains aligned to the screen during rotation',()=>{
   expect(shortestAngle(Math.PI-.02,-Math.PI+.02)).toBeCloseTo(.04,8);const rig=new CameraRig(),camera=new T.OrthographicCamera(-10,10,10,-10);rig.rotate(7);
   for(let n=0;n<100;n++){rig.update(camera,new T.Vector3(),16);const p=rig.movement(1,0),origin=new T.Vector3().project(camera),right=new T.Vector3(p.x,0,p.z).project(camera);expect(right.x).toBeGreaterThan(origin.x);expect(right.y).toBeCloseTo(origin.y,7);const w=rig.movement(0,-1),up=new T.Vector3(w.x,0,w.z).project(camera);expect(up.y).toBeGreaterThan(origin.y);expect(up.x).toBeCloseTo(origin.x,7);}
- });
- it('cuts away foreground blockers, including raised floors, without hiding objects behind the hero',()=>{
-  const eye=new T.Vector3(0,10,10),focus=new T.Vector3(0,0,0);
-  expect(blocksView(new T.Box3(new T.Vector3(-1,3,4),new T.Vector3(1,7,6)),eye,focus)).toBe(true);
-  expect(blocksView(new T.Box3(new T.Vector3(-1,4,3),new T.Vector3(1,4.4,5)),eye,focus)).toBe(true);
-  expect(blocksView(new T.Box3(new T.Vector3(-1,0,-6),new T.Vector3(1,7,-4)),eye,focus)).toBe(false);
-  expect(blocksView(new T.Box3(new T.Vector3(4,3,4),new T.Vector3(6,7,6)),eye,focus)).toBe(false);
  });
 });

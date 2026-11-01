@@ -84,7 +84,8 @@ export const assetCatalog = {
       },
       "modelId": "acrobat",
       "geometrySource": "src/render/characters.ts",
-      "legacySpriteMode": "uprightBillboard"
+      "legacySpriteMode": "uprightBillboard",
+      "style": "animeToon"
     }
   },
   "visual.character.hero": {
@@ -171,7 +172,8 @@ export const assetCatalog = {
       },
       "modelId": "hero",
       "geometrySource": "src/render/characters.ts",
-      "legacySpriteMode": "uprightBillboard"
+      "legacySpriteMode": "uprightBillboard",
+      "style": "animeToon"
     }
   },
   "visual.character.illusionist": {
@@ -258,7 +260,8 @@ export const assetCatalog = {
       },
       "modelId": "illusionist",
       "geometrySource": "src/render/characters.ts",
-      "legacySpriteMode": "uprightBillboard"
+      "legacySpriteMode": "uprightBillboard",
+      "style": "animeToon"
     }
   },
   "visual.character.knife-thrower": {
@@ -345,7 +348,8 @@ export const assetCatalog = {
       },
       "modelId": "knife-thrower",
       "geometrySource": "src/render/characters.ts",
-      "legacySpriteMode": "uprightBillboard"
+      "legacySpriteMode": "uprightBillboard",
+      "style": "animeToon"
     }
   },
   "visual.character.quartermaster": {
@@ -432,7 +436,8 @@ export const assetCatalog = {
       },
       "modelId": "quartermaster",
       "geometrySource": "src/render/characters.ts",
-      "legacySpriteMode": "uprightBillboard"
+      "legacySpriteMode": "uprightBillboard",
+      "style": "animeToon"
     }
   },
   "visual.character.ringmaster": {
@@ -519,7 +524,8 @@ export const assetCatalog = {
       },
       "modelId": "ringmaster",
       "geometrySource": "src/render/characters.ts",
-      "legacySpriteMode": "uprightBillboard"
+      "legacySpriteMode": "uprightBillboard",
+      "style": "animeToon"
     }
   },
   "visual.character.stagehand": {
@@ -606,7 +612,8 @@ export const assetCatalog = {
       },
       "modelId": "stagehand",
       "geometrySource": "src/render/characters.ts",
-      "legacySpriteMode": "uprightBillboard"
+      "legacySpriteMode": "uprightBillboard",
+      "style": "animeToon"
     }
   },
   "visual.item.costume": {
@@ -1192,6 +1199,37 @@ export const assetCatalog = {
         "created": "2026-10-31"
       },
       "repeat": true
+    }
+  },
+  "visual.ui.tarot": {
+    "kind": "ui",
+    "base": "assets/ui/tarot/",
+    "files": {
+      "mask": "assets/ui/tarot/mask.webp",
+      "wheel": "assets/ui/tarot/wheel.webp",
+      "blades": "assets/ui/tarot/blades.webp",
+      "crimson": "assets/ui/tarot/crimson.webp",
+      "figure": "assets/ui/tarot/figure.webp",
+      "curtain": "assets/ui/tarot/curtain.webp"
+    },
+    "meta": {
+      "schemaVersion": 1,
+      "id": "visual.ui.tarot",
+      "kind": "ui",
+      "renderMode": "domTarot",
+      "frame": {
+        "width": 640,
+        "height": 960
+      },
+      "files": {
+        "mask": "mask.webp",
+        "wheel": "wheel.webp",
+        "blades": "blades.webp",
+        "crimson": "crimson.webp",
+        "figure": "figure.webp",
+        "curtain": "curtain.webp"
+      },
+      "origin": "original imagegen illustrations; titles rendered as native DOM text"
     }
   }
 } as Record<string,{kind:string;base:string;files:Record<string,string>;meta:Record<string,unknown>}>;

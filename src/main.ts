@@ -1,4 +1,5 @@
 import { verse } from './content/verse';
+import { tarotSpread } from './content/tarot';
 import './style.css';
 import './settings.css';
 import { actById, characterById, itemById, worldData } from './content';
@@ -18,6 +19,7 @@ const targetEl=document.getElementById('targets')!,promptEl=document.getElementB
 const scene=new GameScene(viewport),audio=new GameAudio();
 try{Object.assign(audio.volume,JSON.parse(localStorage.getItem('last-applause:v1:settings')??'{}'));}catch{}
 let world=createWorld(),overlay:Overlay='intro',targetId:string|null=null,message='',last=performance.now(),accumulator=0,toastTimer=0,devVisible=false,devPaths=false,lastTargetKey='';
+let selectedTarot:string|null=null;
 const keys=new Set<string>();
 function escapeHtml(value:string){return value.replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]!));}
 function toast(text:string){toastEl.textContent=text;toastEl.hidden=false;toastTimer=performance.now()+3500;}
@@ -26,11 +28,11 @@ function optionsHtml(opts:Option[]){return opts.map(o=>`<button class="choice" d
 function renderOverlay(){
   if(!overlay){overlayEl.hidden=true;return;}overlayEl.hidden=false;let title='',body='',buttons='';
   if(overlay==='intro'){
-    title=verse('ui.003');body=verse('ui.004');
+    title=verse('ui.003');body=tarotSpread(false,selectedTarot);
     buttons=verse('ui.005', {p0: hasSave('manual')?verse('ui.006'):''});
   } else if(overlay==='target'&&targetId){
     title=world.actors[targetId]?characterById[targetId].name:world.items[targetId]?itemById[world.items[targetId].defId].name:worldData.interactables.find(x=>x.id===targetId)?.name??verse('ui.007');
-    body=(world.items[targetId]?`<img class="item-preview" src="${scene.icons.icon(itemById[world.items[targetId].defId])}" alt="${escapeHtml(title)}">`:'')+`<p class="dialogue">${escapeHtml(message||verse('ui.008')).replace(/\n/g,'<br>')}</p>`;
+    body=(targetId==='station.poster'?tarotSpread(false,selectedTarot):'')+(world.items[targetId]?`<img class="item-preview" src="${scene.icons.icon(itemById[world.items[targetId].defId])}" alt="${escapeHtml(title)}">`:'')+(targetId==='station.poster'?'':`<p class="dialogue">${escapeHtml(message||verse('ui.008')).replace(/\n/g,'<br>')}</p>`);
     buttons=optionsHtml(getOptions(world,targetId))+verse('ui.009');
   } else if(overlay==='inventory'){
     title=verse('ui.010');const owned=Object.values(world.items).filter(i=>i.location.kind==='actor'&&i.location.actorId==='player');
@@ -40,20 +42,20 @@ function renderOverlay(){
   } else if(overlay==='journal'){
     title=verse('ui.015');body=verse('ui.016', {p0: world.slots.map(x=>`<li>${escapeHtml(actById[x.actId].name)} — ${x.status==='completed'?verse('ui.017'):verse('ui.018')}</li>`).join(''), p1: world.agreements.map(a=>`${escapeHtml(actById[a.candidateActId].name)}: ${a.status==='committed'?verse('ui.019'):a.status==='candidateAccepted'?verse('ui.020'):verse('ui.021')}`).join('<br>')||verse('ui.022'), p2: world.facts.map(f=>`<li>${escapeHtml(factText(f))}</li>`).join(''), p3: world.log.slice(0,8).map(escapeHtml).join('<br>')});buttons=verse('ui.023');
   } else if(overlay==='vision'){
-    title=verse('ui.024');body=verse('ui.025');buttons=verse('ui.026');
+    title=verse('ui.024');body=tarotSpread(false,selectedTarot);buttons=verse('ui.026');
   } else if(overlay==='pause'){
     title=verse('ui.027');body=verse('ui.028', {p0: (['master','music','ambience','sfx'] as const).map(id=>`<label class="volume">${{master:verse('ui.029'),music:verse('ui.030'),ambience:verse('ui.031'),sfx:verse('ui.032')}[id]}<input type="range" min="0" max="1" step="0.05" data-volume="${id}" value="${audio.volume[id]}"></label>`).join('')});
     buttons=verse('ui.033', {p0: world.mode!=='playing'?'disabled':'', p1: !hasSave('manual')?'disabled':''});
   } else if(overlay==='stage'){
     title=world.mode==='finale'?verse('ui.034'):actById[world.activeActId??'']?.name??verse('ui.035');
-    body=world.mode==='finale'?verse('ui.036', {p0: Math.ceil((world.finaleDeadline-world.gameTimeMs)/1000)}):verse('ui.037', {p0: world.cueIndex+1});
+    body=world.mode==='finale'?verse('ui.036', {cards:tarotSpread(true),p0: Math.ceil((world.finaleDeadline-world.gameTimeMs)/1000)}):verse('ui.037', {p0: world.cueIndex+1});
     buttons=optionsHtml(getOptions(world,'station.stage'));
   } else if(overlay==='end'){
     title=world.mode==='won'?verse('ui.038'):verse('ui.039');
-    body=verse('ui.040', {p0: escapeHtml(world.ending??world.deathReason??'')});
+    body=verse('ui.040', {cards:tarotSpread(true),p0: escapeHtml(world.ending??world.deathReason??'')});
     buttons=world.mode==='dead'?verse('ui.041', {p0: hasSave('checkpoint')?'':'disabled'}):verse('ui.042');
   }
-  overlayEl.innerHTML=verse('ui.043', {p0: title, p1: body, p2: buttons});
+  overlayEl.innerHTML=verse('ui.043', {p0: title, p1: body, p2: buttons});overlayEl.querySelector('.modal')?.classList.toggle('tarot-modal',overlay==='intro'||overlay==='vision'||overlay==='target'&&targetId==='station.poster');
 }
 function factText(f:string){const map:Record<string,string>={'fact.vision':verse('ui.044'),'fact.cabinet_seen':verse('ui.045'),'fact.hidden_passage':verse('ui.046'),'fact.blackout':verse('ui.047'),'fact.knife_inspection':verse('ui.048'),'fact.safe_issued':verse('ui.049')};return map[f]??'Ще одна підказка з-за лаштунків.';}
 function updateHud(){
@@ -68,10 +70,11 @@ function updateHud(){
   if(import.meta.env.DEV&&devVisible){const d=scene.diagnostics();devEl.hidden=false;devEl.innerHTML=verse('ui.057', {p0: Math.round(1000/Math.max(1,performance.now()-last)), p1: Math.round(world.gameTimeMs/1000), p2: d.drawCalls, p3: d.textures, p4: d.placeholderSlots, p5: world.events.length, p6: Object.values(world.actors).map(a=>`${a.id}: ${a.task} → ${a.goalNode} [${a.route.join(',')}]`).join('\n'), p7: Object.values(world.items).map(i=>`${i.instanceId}: ${i.location.kind}${i.location.kind==='actor'?` ${i.location.actorId}`:i.location.kind==='world'?` ${i.location.areaId}`:''}`).join('\n')});}else devEl.hidden=true;
   if(overlay==='stage'&&world.mode==='act'){const current=document.querySelector<HTMLButtonElement>('#overlay button[data-action="cue"]');const available=getOptions(world,'station.stage')[0];if(current&&current.disabled===available.enabled)renderOverlay();}
 }
-function openTarget(id:string){targetId=id;message=verse('ui.058');overlay='target';renderOverlay();}
+function openTarget(id:string){selectedTarot=null;targetId=id;message=verse('ui.058');overlay='target';renderOverlay();}
 function closeOverlay(){overlay=world.mode==='act'||world.mode==='finale'?'stage':null;message='';renderOverlay();accumulator=0;}
 function doAction(id:string){
   const target=overlay==='stage'?'station.stage':targetId;if(!target)return;
+  if(id==='vision'){selectedTarot=null;overlay='vision';renderOverlay();return;}
   if(id==='startFinale'||id==='startAct')saveWorld('checkpoint',world);
   const res=execute(world,target,id);message=res.message;toast(res.message);if(res.sound)audio.play(res.sound);
   if(res.checkpoint&&world.mode==='playing')saveWorld('checkpoint',world);
@@ -86,6 +89,7 @@ function uiAction(action:string){audio.unlock();audio.play('ui');
   if(action==='close')closeOverlay();
 }
 overlayEl.addEventListener('click',e=>{const button=(e.target as HTMLElement).closest('button') as HTMLButtonElement|null;if(!button)return;
+  if(button.dataset.tarot){selectedTarot=selectedTarot===button.dataset.tarot?null:button.dataset.tarot;audio.unlock();audio.play('ui');renderOverlay();overlayEl.querySelector<HTMLButtonElement>(`[data-tarot="${button.dataset.tarot}"]`)?.focus();return;}
   if(button.dataset.action)doAction(button.dataset.action);else if(button.dataset.ui)uiAction(button.dataset.ui);else if(button.dataset.item)openTarget(button.dataset.item);
 });
 overlayEl.addEventListener('input',e=>{const input=e.target as HTMLInputElement;const key=input.dataset.volume as keyof typeof audio.volume|undefined;if(!key)return;audio.volume[key]=Number(input.value);localStorage.setItem('last-applause:v1:settings',JSON.stringify(audio.volume));});
@@ -104,7 +108,7 @@ window.addEventListener('keydown',e=>{
   keys.add(e.code);const action=actionFor(e.code);if(!action)return;
   if(action==='interact'&&overlay===null){const nearest=nearbyTargets(world)[0];if(nearest)openTarget(nearest.id);}
   if(action==='inventory'&&world.mode==='playing'){overlay=overlay==='inventory'?null:'inventory';renderOverlay();}
-  if(action==='vision'&&world.mode==='playing'){overlay=overlay==='vision'?null:'vision';renderOverlay();}
+  if(action==='vision'&&world.mode==='playing'){selectedTarot=null;overlay=overlay==='vision'?null:'vision';renderOverlay();}
   if(action==='journal'&&world.mode==='playing'){overlay=overlay==='journal'?null:'journal';renderOverlay();}
   if(action==='pause'){if(overlay==='intro'||overlay==='end'||overlay==='stage')return;overlay=overlay==='pause'?null:overlay?null:'pause';renderOverlay();}
 });

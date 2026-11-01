@@ -2,14 +2,14 @@ import { expect, test } from '@playwright/test';
 
 test('new show, visible 3D scene, movement, inspection, journal, save and restore',async({page})=>{
   const errors:string[]=[];page.on('pageerror',e=>errors.push(e.message));
-  await page.goto('/');await expect(page.getByRole('heading',{name:'Карта останнього номера'})).toBeVisible();
+  await page.goto('/');await expect(page.getByRole('heading',{name:'Розклад останнього номера'})).toBeVisible();
   await page.locator('#overlay [data-ui="new"]').click();
   await expect(page.locator('#viewport canvas')).toBeVisible();
   await page.screenshot({path:'test-results/start.png'});
   await page.keyboard.press('KeyE');await expect(page.getByRole('heading',{name:'Афіша з видінням'})).toBeVisible();
-  await page.locator('[data-action="inspect"]').click();await expect(page.locator('.dialogue')).toContainText('Маска');
+  await page.locator('[data-action="inspect"]').click();await expect(page.locator('.tarot-spread')).toBeVisible();
   await page.locator('#overlay [data-ui="close"]').click();
-  await page.keyboard.press('KeyQ');await expect(page.getByRole('heading',{name:'Карта пророцтва'})).toBeVisible();await page.locator('#overlay [data-ui="close"]').click();
+  await page.keyboard.press('KeyQ');await expect(page.getByRole('heading',{name:'Карти пророцтва'})).toBeVisible();await page.locator('#overlay [data-ui="close"]').click();
   await page.keyboard.press('Tab');await expect(page.getByRole('heading',{name:'Реквізит'})).toBeVisible();await page.locator('#overlay [data-ui="close"]').click();
   await page.keyboard.press('KeyJ');await expect(page.getByRole('heading',{name:'Журнал вистави'})).toBeVisible();await page.locator('#overlay [data-ui="close"]').click();
   await page.keyboard.press('Escape');await page.locator('#overlay [data-ui="save"]').click();
